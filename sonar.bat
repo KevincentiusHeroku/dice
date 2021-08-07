@@ -1,1 +1,0 @@
-sonar-scanner.bat -D"sonar.projectKey=TDS-Engine" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.login=admin" -D"sonar.password="

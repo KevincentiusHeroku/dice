@@ -6,16 +6,20 @@
 - Go to localhost:9000, login as admin/admin, create project named "TDS Engine" and create a token
 - Put the following in your global VS Code settings (not in project settings!):
 
-```
+  ```
     "sonarlint.connectedMode.connections.sonarqube": [
       {
         "serverUrl": "http://localhost:9000",
         "token": "XXXXX"
       }
     ],
-```
+  ```
 
-- To analyze the project, run the sonar.bat (enter your password in the bat file first)
+- To analyze the project, run:
+
+  ```
+  sonar-scanner.bat -D"sonar.projectKey=TDS-Engine" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.login=admin" -D"sonar.password=admin"`
+  ```
 
 # Karma test
 
