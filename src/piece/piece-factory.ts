@@ -1,11 +1,14 @@
 import { singleton } from "tsyringe";
 import { Tile } from "../tile/tile";
-import { Piece } from "./piece";
+import { Piece, PieceId } from "./piece";
 import { PIECES } from "./piece-data";
 
 @singleton()
 export class PieceFactory {
-  create(size: number, variant: number): Piece {
+  create(pieceId: PieceId): Piece {
+    let size = pieceId.size;
+    let variant = pieceId.variant;
+
     let p = PIECES[size - 1][variant];
   
     let mat: Tile[][] = new Array();

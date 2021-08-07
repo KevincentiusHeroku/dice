@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { Board } from "../src/board";
 
 describe(Board.name, () => {

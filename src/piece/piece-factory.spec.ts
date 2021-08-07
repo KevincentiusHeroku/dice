@@ -7,7 +7,7 @@ describe(PieceFactory.name, () => {
   const pieceFactory = container.resolve(PieceFactory);
 
   it("should create the T-piece", () => {
-    const piece = pieceFactory.create(4, 5);
+    const piece = pieceFactory.create({ size: 4, variant: 5});
     expect(piece.id.size).toBe(4);
     expect(piece.id.variant).toBe(5);
     expect(piece.tiles.length).toBe(3);
@@ -26,7 +26,7 @@ describe(PieceFactory.name, () => {
   it("should only create connected pieces", () => {
     for (let size = 2; size <= 6; size++) {
       for (let variant = 0; variant < PIECES[size-1].length; variant++) {
-        const piece = pieceFactory.create(size, variant);
+        const piece = pieceFactory.create({ size, variant });
         expect(piece.id.size).toBe(size);
         
         for (let p of PIECES[size-1][variant].sparse) {
@@ -39,7 +39,7 @@ describe(PieceFactory.name, () => {
   it("should contain the right number of minoes", () => {
     for (let size = 1; size <= 6; size++) {
       for (let variant = 0; variant < PIECES[size-1].length; variant++) {
-        const piece = pieceFactory.create(size, variant);
+        const piece = pieceFactory.create({ size, variant });
         expect(piece.id.size).toBe(size);
         expect(piece.tiles.flat().filter(t => t != null).length).toBe(size);
       }
