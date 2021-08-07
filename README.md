@@ -15,7 +15,7 @@
     ],
 ```
 
-- To analyze the project, run the sonar.bat
+- To analyze the project, run the sonar.bat (enter your password in the bat file first)
 
 # Karma test
 
