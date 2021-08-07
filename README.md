@@ -15,6 +15,8 @@
     ],
 ```
 
+- To analyze the project, run the sonar.bat
+
 # Karma test
 
 `npx karma start`

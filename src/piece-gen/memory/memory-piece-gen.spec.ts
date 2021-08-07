@@ -13,7 +13,7 @@ describe(MemoryPieceGen.name, () => {
     { size: 4, variant: 5, multiplier: 1 },
   ];
 
-  itShouldPassGenericTests(MemoryPieceGen, (pieceGen: MemoryPieceGen, r, p) => pieceGen.init(r, p, 2));
+  itShouldPassGenericTests(MemoryPieceGen, (pieceGen: MemoryPieceGen, r2, p) => pieceGen.init(r2, p, 2));
 
   it("should throw error if bag size >= memory size", () => {
     const pieceGen = container.resolve(MemoryPieceGen);
