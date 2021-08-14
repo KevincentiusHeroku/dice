@@ -15,7 +15,7 @@ describe(BagPieceGen.name, () => {
     { size: 4, variant: 5, multiplier: 2 },
   ];
 
-  itShouldPassGenericTests(PieceGenType.BAG, (pieceGen: BagPieceGen, r, p) => pieceGen.init(r, p));
+  itShouldPassGenericTests(PieceGenType.BAG, (pieceGen: BagPieceGen, rd, p) => pieceGen.init(rd, p));
 
   it('should generate one of each piece', () => {
     const pieceGen = container.resolve(BagPieceGen);

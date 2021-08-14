@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Board } from "../src/board";
+import { Board } from "./board";
 
 describe(Board.name, () => {
   it("should start as an empty, height x width board", () => {

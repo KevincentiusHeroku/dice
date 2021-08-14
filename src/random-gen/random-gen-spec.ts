@@ -54,9 +54,7 @@ describe(RandomGen.name, () => {
     let orderIsEqual = true;
     for (let i = 0; i < 100; i++) {
       expect(list.indexOf(shuffled[i]) != -1).toBeTrue();
-      if (list[i] != shuffled[i]) {
-        orderIsEqual = false;
-      }
+      orderIsEqual = orderIsEqual && (list[i] == shuffled[i]);
     }
     
     expect(orderIsEqual).toBeFalse();
@@ -78,7 +76,7 @@ describe(RandomGen.name, () => {
 
     let r2 = new RandomGen(0);
     r2.restore(r1.snapshot());
-    
+
     verifySameSequence(r1, r2);
   });
 
