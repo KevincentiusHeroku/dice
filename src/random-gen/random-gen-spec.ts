@@ -62,13 +62,31 @@ describe(RandomGen.name, () => {
     expect(orderIsEqual).toBeFalse();
   });
 
-  it("should produce the same results with the same seed", () => {
+  it("should produce the same sequence with the same seed", () => {
     let r1 = new RandomGen(10);
     let r2 = new RandomGen(10);
+    verifySameSequence(r1, r2);
+  });
+
+  it("should produce the same sequence when loaded from a snapshot", () => {
+    let r1 = new RandomGen(100);
+    for (let i = 0; i < 100; i++) {
+      r1.int();
+      r1.range(100, 1000);
+      r1.chance(0.5);
+    }
+
+    let r2 = new RandomGen(0);
+    r2.restore(r1.snapshot());
+    
+    verifySameSequence(r1, r2);
+  });
+
+  function verifySameSequence(r1: RandomGen, r2: RandomGen) {
     for (let i = 0; i < 100; i++) {
       expect(r1.int() == r2.int()).toBeTrue();
       expect(r1.range(100, 1000) == r2.range(100, 1000)).toBeTrue();
       expect(r1.chance(0.5) == r2.chance(0.5)).toBeTrue();
     }
-  });
+  }
 });

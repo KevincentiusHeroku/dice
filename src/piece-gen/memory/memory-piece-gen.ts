@@ -1,8 +1,9 @@
+import { deepCopy } from "deep-copy-ts";
 import { injectable } from "tsyringe";
-import { logMemoryPieceGen } from "../../log";
 import { Piece, PieceId } from "../../piece/piece";
 import { PieceFactory } from "../../piece/piece-factory";
 import { RandomGen } from "../../random-gen/random-gen";
+import { PieceGenSnapshot, PieceGenType } from "../factory/piece-gen-data";
 import { NotInitializedError, PieceGen, PieceList } from "../piece-gen";
 import { PieceGenUtil } from "../util/piece-gen-util";
 
@@ -12,32 +13,50 @@ export class InvalidMemorySizeError extends Error {
   }
 }
 
+interface MemoryPieceGenSnapshot extends PieceGenSnapshot {
+  bag: PieceId[];
+  mem: PieceId[];
+  nextMemId: number;
+}
+
 @injectable()
 export class MemoryPieceGen implements PieceGen {
   private r: RandomGen | undefined;
-  private bag: PieceId[] = [];
-  private mem: PieceId[] = [];
-  private nextMemId = 0;
-
-  private log = logMemoryPieceGen;
+  private data: MemoryPieceGenSnapshot = {
+    type: PieceGenType.MEMORY,
+    bag: [],
+    mem: [],
+    nextMemId: 0,
+  };
 
   constructor(
     private pieceFactory: PieceFactory,
     private util: PieceGenUtil
   ) {}
 
+  snapshot(): MemoryPieceGenSnapshot {
+    return deepCopy(this.data);
+  }
+
+  restore(snapshot: MemoryPieceGenSnapshot) {
+    this.data = snapshot;
+    return this;
+  }
+
   init(r: RandomGen, pieceLists: PieceList[], memSize: number) {
+    const d = this.data;
+
     this.r = r;
-    this.bag = this.util.getBag(pieceLists);
+    d.bag = this.util.getBag(pieceLists);
 
     // memory size must be smaller than the bag size,
     // otherwise at the end of the first bag, any piece would be a repeat,
     // i.e. there is no legal piece to spawn
-    if (memSize >= this.bag.length) {
+    if (memSize >= d.bag.length) {
       throw new InvalidMemorySizeError();
     }
 
-    this.mem = this.bag.splice(this.bag.length - memSize);
+    d.mem = d.bag.splice(d.bag.length - memSize);
   }
 
   next(): Piece {
@@ -49,11 +68,13 @@ export class MemoryPieceGen implements PieceGen {
       throw new NotInitializedError();
     }
 
-    let r = this.r.int(this.bag.length);
-    let ret = this.bag[r];
-    this.bag[r] = this.mem[this.nextMemId];
-    this.mem[this.nextMemId] = ret;
-    this.nextMemId = (this.nextMemId + 1) % this.mem.length;
+    const d = this.data;
+
+    let r = this.r.int(d.bag.length);
+    let ret = d.bag[r];
+    d.bag[r] = d.mem[d.nextMemId];
+    d.mem[d.nextMemId] = ret;
+    d.nextMemId = (d.nextMemId + 1) % d.mem.length;
     return ret;
   }
 }

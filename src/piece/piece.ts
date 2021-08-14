@@ -1,3 +1,4 @@
+import { singleton } from "tsyringe";
 import { Tile } from "../tile/tile";
 
 export interface Piece {

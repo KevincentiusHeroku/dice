@@ -5,6 +5,7 @@ import { container } from "tsyringe";
 import { RandomGen } from "../../random-gen/random-gen";
 import { PieceList } from "../piece-gen";
 import { PieceId } from "../../piece/piece";
+import { PieceGenType } from "../factory/piece-gen-data";
 
 describe(BagPieceGen.name, () => {
   const r = new RandomGen(100);
@@ -14,7 +15,7 @@ describe(BagPieceGen.name, () => {
     { size: 4, variant: 5, multiplier: 2 },
   ];
 
-  itShouldPassGenericTests(BagPieceGen, (pieceGen: BagPieceGen, r, p) => pieceGen.init(r, p));
+  itShouldPassGenericTests(PieceGenType.BAG, (pieceGen: BagPieceGen, r, p) => pieceGen.init(r, p));
 
   it('should generate one of each piece', () => {
     const pieceGen = container.resolve(BagPieceGen);

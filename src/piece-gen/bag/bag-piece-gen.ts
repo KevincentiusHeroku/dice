@@ -1,25 +1,44 @@
 
+import { deepCopy } from "deep-copy-ts";
 import { injectable } from "tsyringe";
 import { Piece, PieceId } from "../../piece/piece";
 import { PieceFactory } from "../../piece/piece-factory";
 import { RandomGen } from "../../random-gen/random-gen";
+import { PieceGenSnapshot, PieceGenType } from "../factory/piece-gen-data";
 import { NotInitializedError, PieceGen, PieceList } from "../piece-gen";
 import { PieceGenUtil } from "../util/piece-gen-util";
+
+interface BagPieceGenSnapshot extends PieceGenSnapshot {
+  bag: PieceId[];
+  pieceLists: PieceList[] | undefined;
+}
 
 @injectable()
 export class BagPieceGen implements PieceGen {
   private r: RandomGen | undefined;
-  private bag: PieceId[] = [];
-  private pieceLists: PieceList[] | undefined;
+  private data: BagPieceGenSnapshot = {
+    type: PieceGenType.BAG,
+    bag: [],
+    pieceLists: undefined,
+  };
 
   constructor(
     private pieceFactory: PieceFactory,
     private util: PieceGenUtil
   ) {}
 
+  snapshot(): BagPieceGenSnapshot {
+    return deepCopy(this.data);
+  }
+
+  restore(snapshot: BagPieceGenSnapshot): PieceGen {
+    this.data = snapshot;
+    return this;
+  }
+
   init(r: RandomGen, pieceLists: PieceList[]) {
     this.r = r;
-    this.pieceLists = pieceLists;
+    this.data.pieceLists = pieceLists;
   }
 
   next(): Piece {
@@ -27,15 +46,17 @@ export class BagPieceGen implements PieceGen {
   }
 
   nextId(): PieceId {
-    if (!this.pieceLists || !this.r) {
+    const d = this.data;
+
+    if (!d.pieceLists || !this.r) {
       throw new NotInitializedError();
     }
 
-    if (this.bag.length == 0) {
-      this.bag = this.util.getBag(this.pieceLists);
-      this.r.shuffle(this.bag);
+    if (d.bag.length == 0) {
+      d.bag = this.util.getBag(d.pieceLists);
+      this.r.shuffle(d.bag);
     }
     
-    return this.bag.pop()!;
+    return d.bag.pop()!;
   }
 }

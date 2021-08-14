@@ -9,10 +9,23 @@ interface Prng {
   state(): seedrandom.State;
 }
 
+interface RandomGenSnapshot {
+  state: object;
+}
+
 export class RandomGen {
   private r: Prng;
   constructor(seed: number) {
-    this.r = seedrandom.alea(seed.toString());
+    this.r = seedrandom.alea(seed.toString(), { state: true });
+  }
+
+  snapshot(): RandomGenSnapshot {
+    return { state: this.r.state() };
+  }
+
+  restore(snapshot: RandomGenSnapshot) {
+    this.r = seedrandom.alea(undefined, { state: snapshot.state });
+    return this;
   }
 
   int(max: number = Number.MAX_SAFE_INTEGER) {

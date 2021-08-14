@@ -2,8 +2,7 @@
   "name": "tds-engine",
   "version": "0.0.1",
   "scripts": {
-    "test": "nyc -e .ts -x \"*.spec.ts\" jasmine-ts \"**/*.spec.ts\"",
-    "testa": "nodemon --ext ts --exec 'jasmine-ts \"spec/**/*.spec.ts\"'"
+    "test": "karma start"
   },
   "private": true,
   "references": [],
@@ -24,6 +23,7 @@
   },
   "dependencies": {
     "@types/seedrandom": "^3.0.1",
+    "deep-copy-ts": "^0.5.0",
     "jasmine-ts": "^0.4.0",
     "nyc": "^15.1.0",
     "reflect-metadata": "^0.1.13",
