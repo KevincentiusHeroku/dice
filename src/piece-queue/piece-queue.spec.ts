@@ -8,7 +8,7 @@ describe(PieceQueue.name, () => {
   it("should ", () => {
     const pieceQueue = container.resolve(PieceQueue);
 
-    const pieceGen = mock<PieceGen<any>>();
+    const pieceGen = mock<PieceGen>();
 
     pieceQueue.init({
       numHolds: 0,

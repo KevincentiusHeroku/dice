@@ -10,7 +10,7 @@ interface PieceQueueSnapshot {
 
 @injectable()
 export class PieceQueue {
-  private pieceGen: PieceGen<any> | undefined;
+  private pieceGen: PieceGen | undefined;
 
   private data: PieceQueueSnapshot = {
     previews: [],
@@ -21,7 +21,7 @@ export class PieceQueue {
   init(opts: {
     numPreviews: number,
     numHolds: number,
-    pieceGen: PieceGen<any>,
+    pieceGen: PieceGen,
   }) {
     const d = this.data;
 

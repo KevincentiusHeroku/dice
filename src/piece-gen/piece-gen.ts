@@ -1,6 +1,5 @@
 import { Category } from "typescript-logging";
 import { Piece, PieceId } from "../piece/piece";
-import { PieceGenSnapshot as PieceGenSnapshot } from "./factory/piece-gen-data";
 
 export const log = new Category("PieceGenerator");
 
@@ -16,7 +15,7 @@ export interface PieceList {
   multiplier: number;
 }
 
-export interface PieceGen<S extends PieceGenSnapshot> extends Snapshotable<S> {
+export interface PieceGen extends Snapshotable {
   next(): Piece;
   nextId(): PieceId;
 }

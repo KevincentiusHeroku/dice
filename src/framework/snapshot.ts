@@ -1,7 +1,7 @@
 
-interface Snapshotable<T> {
-  snapshot(): T;
-  restore(snapshot: any): Snapshotable<T>;
+interface Snapshotable {
+  snapshot(): any;
+  restore(snapshot: any): Snapshotable;
 }
 
 class Snapshot<T> {

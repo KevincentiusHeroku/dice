@@ -7,7 +7,7 @@ import { PieceGenSnapshot, PieceGenType } from "./piece-gen-data";
 
 @singleton()
 export class PieceGenFactory {
-  create(type: PieceGenType): PieceGen<PieceGenSnapshot> {
+  create(type: PieceGenType): PieceGen {
     switch (type) {
       case PieceGenType.BAG   : return container.resolve(BagPieceGen);
       case PieceGenType.MEMORY: return container.resolve(MemoryPieceGen);

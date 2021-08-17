@@ -14,7 +14,7 @@ interface BagPieceGenSnapshot extends PieceGenSnapshot {
 }
 
 @injectable()
-export class BagPieceGen implements PieceGen<BagPieceGenSnapshot> {
+export class BagPieceGen implements PieceGen {
   private r: RandomGen | undefined;
   private data: BagPieceGenSnapshot = {
     type: PieceGenType.BAG,
