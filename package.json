@@ -28,6 +28,7 @@
     "nyc": "^15.1.0",
     "reflect-metadata": "^0.1.13",
     "seedrandom": "^3.0.5",
+    "ts-mockito": "^2.6.1",
     "tsyringe": "^4.6.0",
     "typescript-logging": "^1.0.0"
   }
