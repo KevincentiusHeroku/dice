@@ -9,7 +9,7 @@ import { PieceGenUtil } from "../util/piece-gen-util";
 interface RandomPieceGenSnapshot extends PieceGenSnapshot {}
 
 @injectable()
-export class RandomPieceGen implements PieceGen {
+export class RandomPieceGen implements PieceGen<RandomPieceGenSnapshot> {
   public static TYPE = PieceGenType.RANDOM;
   private r: RandomGen | undefined;
   private bag: PieceId[] = [];

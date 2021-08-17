@@ -20,7 +20,7 @@ interface MemoryPieceGenSnapshot extends PieceGenSnapshot {
 }
 
 @injectable()
-export class MemoryPieceGen implements PieceGen {
+export class MemoryPieceGen implements PieceGen<MemoryPieceGenSnapshot> {
   private r: RandomGen | undefined;
   private data: MemoryPieceGenSnapshot = {
     type: PieceGenType.MEMORY,

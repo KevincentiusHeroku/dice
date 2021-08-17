@@ -14,7 +14,7 @@ interface BagPieceGenSnapshot extends PieceGenSnapshot {
 }
 
 @injectable()
-export class BagPieceGen implements PieceGen {
+export class BagPieceGen implements PieceGen<BagPieceGenSnapshot> {
   private r: RandomGen | undefined;
   private data: BagPieceGenSnapshot = {
     type: PieceGenType.BAG,
@@ -31,7 +31,7 @@ export class BagPieceGen implements PieceGen {
     return deepCopy(this.data);
   }
 
-  restore(snapshot: BagPieceGenSnapshot): PieceGen {
+  restore(snapshot: BagPieceGenSnapshot): BagPieceGen {
     this.data = snapshot;
     return this;
   }

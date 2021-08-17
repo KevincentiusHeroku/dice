@@ -1,12 +1,12 @@
 import { container } from "tsyringe";
 import { PieceUtil } from "../piece/piece-util";
 import { RandomGen } from "../random-gen/random-gen";
-import { PieceGenType } from "./factory/piece-gen-data";
+import { PieceGenSnapshot, PieceGenType } from "./factory/piece-gen-data";
 import { PieceGenFactory } from "./factory/piece-gen-factory";
 import { NotInitializedError, PieceGen, PieceList } from "./piece-gen";
 
 
-export function itShouldPassGenericTests<T extends PieceGen>(
+export function itShouldPassGenericTests<T extends PieceGen<any>>(
   type: PieceGenType,
   initCallback: (pieceGen: T, r: RandomGen, p: PieceList[]) => void
 ) {
@@ -20,7 +20,7 @@ export function itShouldPassGenericTests<T extends PieceGen>(
   ];
 
   it("should throw error if not initialized", () => {
-    const pieceGen: PieceGen = pieceGenFactory.create(type) as T;
+    const pieceGen: PieceGen<any> = pieceGenFactory.create(type) as T;
     expect(() => pieceGen.nextId() ).toThrow(new NotInitializedError());
   });
 

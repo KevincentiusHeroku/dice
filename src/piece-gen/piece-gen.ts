@@ -16,9 +16,7 @@ export interface PieceList {
   multiplier: number;
 }
 
-export interface PieceGen {
+export interface PieceGen<S extends PieceGenSnapshot> extends Snapshotable<S> {
   next(): Piece;
   nextId(): PieceId;
-  snapshot(): PieceGenSnapshot;
-  restore(snapshot: PieceGenSnapshot): PieceGen;
 }
