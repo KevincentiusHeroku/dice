@@ -1,21 +1,31 @@
+import { deepCopy } from "deep-copy-ts";
 import { injectable } from "tsyringe";
 import { PieceGen } from "../piece-gen/piece-gen";
 import { Piece } from "../piece/piece";
 
 interface PieceQueueSnapshot {
-  previews: Piece[];
-  holds: Piece[];
+  previews: (Piece | null)[];
+  holds: (Piece | null)[];
   holdUsed: boolean;
 }
 
 @injectable()
-export class PieceQueue {
+export class PieceQueue implements Snapshotable {
   private pieceGen: PieceGen | undefined;
 
   private data: PieceQueueSnapshot = {
     previews: [],
     holds: [],
     holdUsed: false,
+  }
+
+  snapshot() {
+    return deepCopy(this.data);
+  }
+
+  restore(snapshot: PieceQueueSnapshot): Snapshotable {
+    this.data = snapshot;
+    return this;
   }
 
   init(opts: {
@@ -25,8 +35,8 @@ export class PieceQueue {
   }) {
     const d = this.data;
 
-    d.previews = new Array(opts.numPreviews);
-    d.holds = new Array(opts.numHolds);
+    d.previews = new Array(opts.numPreviews).fill(null);
+    d.holds = new Array(opts.numHolds).fill(null);
     this.pieceGen = opts.pieceGen;
 
     for (let i = 0; i < d.previews.length; i++) {
@@ -34,7 +44,7 @@ export class PieceQueue {
     }
   }
 
-  next(): Piece {
+  next(): (Piece | null) {
     const d = this.data;
 
     // keep first piece to return later
@@ -51,7 +61,7 @@ export class PieceQueue {
     return ret;
   }
 
-  hold(slot: number, piece: Piece): Piece | null {
+  hold(slot: number, piece: Piece | null): Piece | null {
     const d = this.data;
     const ret = d.holds[slot];
     d.holds[slot] = piece;
