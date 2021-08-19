@@ -31,7 +31,7 @@ export class BagPieceGen implements PieceGen {
     return deepCopy(this.data);
   }
 
-  restore(snapshot: BagPieceGenSnapshot): PieceGen {
+  restore(snapshot: BagPieceGenSnapshot): BagPieceGen {
     this.data = snapshot;
     return this;
   }

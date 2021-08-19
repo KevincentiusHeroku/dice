@@ -40,7 +40,7 @@ export function itShouldPassGenericTests<T extends PieceGen>(
     const p1 = initPieceGen(r1);
     
     for (let i = 0; i < 100; i++) {
-      p1.nextId()
+      p1.nextId();
     }
     
     const r2 = new RandomGen(0).restore(r1.snapshot());
