@@ -42,6 +42,8 @@ export class PieceQueue implements Snapshotable {
     for (let i = 0; i < d.previews.length; i++) {
       d.previews[i] = this.pieceGen.next();
     }
+
+    return this;
   }
 
   next(): (Piece | null) {

@@ -41,7 +41,7 @@ describe(PieceFactory.name, () => {
       for (let variant = 0; variant < PIECES[size-1].length; variant++) {
         const piece = pieceFactory.create({ size, variant });
         expect(piece.id.size).toBe(size);
-        expect(piece.tiles.flat().filter(t => t != null).length).toBe(size);
+        expect(piece.tiles.map(row => row.filter(t => t != null).length).reduce((a, b) => a + b)).toBe(size);
       }
     }
   });

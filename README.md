@@ -25,3 +25,10 @@
 
 `npx karma start`
 
+# Current problem
+
+Dice injection is not working:
+
+It seems like the property decorator is called before the class decorator. E.g. the @provides annotation is called before @singleton - hence, the class is not yet registered (has no TypeDesc entry) during the property decorator call.
+
+If this is really the cause, then a solution may be to allow property decorator to register the class as an unknown scope - the class decorator can then update this scope to the correct one later.

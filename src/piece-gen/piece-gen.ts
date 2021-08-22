@@ -15,7 +15,8 @@ export interface PieceList {
   multiplier: number;
 }
 
-export interface PieceGen extends Snapshotable {
-  next(): Piece;
-  nextId(): PieceId;
+export interface PieceGen extends Snapshotable {}
+export abstract class PieceGen implements Snapshotable {
+  abstract next(): Piece;
+  abstract nextId(): PieceId;
 }

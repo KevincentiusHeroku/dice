@@ -1,4 +1,4 @@
-import { Mat } from "./mat";
+import { Mat, matWrap } from "./mat";
 
 describe(Mat.name, () => {
   it("should be a matrix of size i x j", () => {
@@ -31,8 +31,7 @@ describe(Mat.name, () => {
       [9, 6, 3]
     ];
 
-    const mat = new Mat<number>(3, 3);
-    mat.copy(before);
+    const mat = matWrap(before);
     mat.rotate();
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
@@ -47,6 +46,30 @@ describe(Mat.name, () => {
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
         expect(mat[i][j]).toBe(before[i][j]);
+      }
+    }
+  });
+
+  it("should work after being restored from a snapshot", () => {
+    const before = [
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8, 9]
+    ];
+
+    const after = [
+      [7, 4, 1],
+      [8, 5, 2],
+      [9, 6, 3]
+    ];
+
+    const mat = new Mat<number>(1, 1);
+    mat.restore(before);
+    mat.rotate();
+
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        expect(mat[i][j]).toBe(after[i][j]);
       }
     }
   });

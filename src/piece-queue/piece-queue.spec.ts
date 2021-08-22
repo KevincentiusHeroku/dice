@@ -1,9 +1,11 @@
 import "reflect-metadata";
 import { instance, mock, verify, when } from "ts-mockito";
 import { container } from "tsyringe";
+import { Mat } from "../matrix/mat";
 import { PieceGen } from "../piece-gen/piece-gen";
 import { Piece } from "../piece/piece";
 import { PieceUtil } from "../piece/piece-util";
+import { Tile } from "../tile/tile";
 import { PieceQueue } from "./piece-queue";
 
 describe(PieceQueue.name, () => {
@@ -102,7 +104,7 @@ describe(PieceQueue.name, () => {
     // mock pieces
     const pieces : Piece[] = [];
     for (let i = 0; i < numPieces; i++) {
-      pieces.push({ id: { size: 5, variant: i }, tiles: [] });
+      pieces.push(new Piece({ size: 5, variant: i }, new Mat<Tile>(1, 1)));
     }
     expect(pieces[0] == pieces[1]).toBeFalse();
 
