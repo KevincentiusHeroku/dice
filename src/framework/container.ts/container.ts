@@ -7,7 +7,7 @@ export class Container {
       throw new Error('Type ' + type.name + ' is not found.');
     }
 
-    return this.resolve(typeDesc); // TODO: singleton, otherwise autowire dice
+    return this.resolve(typeDesc);
   }
 
   private resolve<T>(typeDesc: TypeDesc<T>): T {
@@ -16,7 +16,6 @@ export class Container {
       if (typeDesc.instance == undefined) {
         typeDesc.instance = container.autowire(typeDesc, new typeDesc.type());
       }
-
       return typeDesc.instance;
     } else if (typeDesc.scope === Scope.PROTOTYPE) {
       return this.autowire(typeDesc, new typeDesc.type());
@@ -29,7 +28,14 @@ export class Container {
   }
 
   private autowire<T>(typeDesc: TypeDesc<T>, instance: T): T {
-    // TODO: inject
+    typeDesc.requires.forEach((propertyTypeDesc, propertyKey) => {
+      (instance as any)[propertyKey] = this.autowire(propertyTypeDesc, new propertyTypeDesc.type());
+    });
+
+    // [typeDesc.provides, typeDesc.requires].forEach(map => map.forEach((propertyTypeDesc, propertyKey) => {
+    //   console.debug('autowiring', typeDesc.type.name + '.' + propertyKey);
+    //   (instance as any)[propertyKey] = this.resolve(propertyTypeDesc);
+    // }));
     return instance;
   }
 }
