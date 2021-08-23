@@ -1,5 +1,5 @@
 
-export enum Scope { SINGLETON, PROTOTYPE, DICE }
+export enum Scope { SINGLETON, DICE }
 export interface Type<T> { new(): T; }
 
 export interface TypeDesc<T> {
@@ -31,26 +31,6 @@ export function singleton<T>(): (type: Type<T>) => void {
       throw new Error('The type ' + type.name + ' is being registered multiple times in the current container!');
     }
     console.debug('Registered singleton ' + type.name);
-  }
-}
-
-export function prototype<T>(): (type: Type<T>) => void {
-  return function(type: Type<T>) {
-    const typeDesc = typeMap.get(type);
-    if (typeDesc == null) {
-      typeMap.set(type, {
-        type: type,
-        scope: Scope.PROTOTYPE,
-  
-        provides: new Map(),
-        requires: new Map(),
-      });
-    } else if (typeDesc.scope === undefined) {
-      typeDesc.scope = Scope.PROTOTYPE;
-    } else {
-      throw new Error('The type ' + type.name + ' is being registered multiple times in the current container!');
-    }
-    console.debug('Registered prototype ' + type.name);
   }
 }
 
