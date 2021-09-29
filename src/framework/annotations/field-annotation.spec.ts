@@ -1,5 +1,4 @@
-import { typeToProvidesMap, typeToRequiresMap } from "../container/type-desc";
-import { provides, requires } from "./field-annotation";
+import { provides, requires, typeToProvidesMap, typeToRequiresMap } from "./field-annotation";
 import { dice } from "./scope-annotation";
 
 @dice()

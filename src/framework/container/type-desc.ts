@@ -1,9 +1,7 @@
-import { ProvidesData } from "../annotations/field-annotation";
+import { ProvidesData, typeToProvidesMap, typeToRequiresMap } from "../annotations/field-annotation";
 import { Dice } from "./dice";
 
 // global variables from decorators:
-export const typeToProvidesMap = new Map<Type<any>, Map<string, ProvidesData<any>>>();
-export const typeToRequiresMap = new Map<Type<any>, Map<string, DiceQuery>>();
 export const typeDescMap = new Map<Type<any>, TypeDesc<any>>();
 export const typeDescByTag = new Map<string, TypeDesc<any>[]>();
 // global variables for main phase:

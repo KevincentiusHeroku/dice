@@ -1,4 +1,8 @@
-import { Type, createQuery, typeToProvidesMap, typeToRequiresMap } from "../container/type-desc";
+import { Type, createQuery, DiceQuery } from "../container/type-desc";
+
+// global variables from decorators:
+export const typeToProvidesMap = new Map<Type<any>, Map<string, ProvidesData<any>>>();
+export const typeToRequiresMap = new Map<Type<any>, Map<string, DiceQuery>>();
 
 export interface ProvidesData<T> {
   type: Type<T>;
