@@ -13,6 +13,12 @@ class ContainerSpecDice {}
 @dice('container-spec-tagged-dice')
 class ContainerSpecTaggedDice {}
 
+@dice('container-spec-duplicate-singleton')
+class ContainerSpecDuplicateSingleton1 {}
+
+@dice('container-spec-duplicate-singleton')
+class ContainerSpecDuplicateSingleton2 {}
+
 describe('Container', () => {
   it('should provide the same instance everytime when queried for singleton by type', () => {
     let container = new Container();
@@ -49,4 +55,10 @@ describe('Container', () => {
     expect(dice1 === dice2).toBeFalse();
     expect(dice1 instanceof ContainerSpecTaggedDice).toBeTrue();
   });
+
+  it('should throw an error if multiple instances matches the query', () => {
+    let container = new Container();
+
+    expect(() => container.resolve('container-spec-duplicate-singleton')).toThrow();
+  })
 });

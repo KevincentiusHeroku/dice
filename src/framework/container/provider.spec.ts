@@ -23,5 +23,16 @@ describe('Provider', () => {
     expect(provider.get(createQuery('instance_two'))).toBe(instance2);
     expect(() => provider.get(createQuery('instance'))).toThrow();
     expect(() => provider.get(createQuery('not_registered_tag'))).toThrow();
+    expect(() => provider.get(createQuery('instance'))).toThrow();
+
+    expect(provider.getIfExists(createQuery(ProviderTestUniqueClass))).toBe(instanceUnique);
+    expect(() => provider.getIfExists(createQuery(ProviderTestClass))).toThrow();
+    expect(provider.getIfExists(createQuery('instance1'))).toBe(instance1);
+    expect(provider.getIfExists(createQuery('instance_one'))).toBe(instance1);
+    expect(provider.getIfExists(createQuery('instance2'))).toBe(instance2);
+    expect(provider.getIfExists(createQuery('instance_two'))).toBe(instance2);
+    expect(() => provider.getIfExists(createQuery('instance'))).toThrow();
+    expect(provider.getIfExists(createQuery('not_registered_tag'))).toBeNull();
+    expect(() => provider.getIfExists(createQuery('instance'))).toThrow();
   });
 });
