@@ -36,7 +36,7 @@ module.exports = function (config) {
       'karma-typescript',
       'karma-coverage',
       'karma-chrome-launcher',
-      'karma-jasmine-html-reporter',
+      'karma-jasmine-html-reporter'
     ],
   })
 }

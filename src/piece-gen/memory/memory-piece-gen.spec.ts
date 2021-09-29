@@ -3,7 +3,7 @@ import { container } from "tsyringe";
 import { RandomGen } from "../../random-gen/random-gen";
 import { InvalidMemorySizeError, MemoryPieceGen } from "./memory-piece-gen";
 import { PieceList } from "../piece-gen";
-import { itShouldPassGenericTests } from "../piece-gen-test-util.spec";
+import { itShouldPassGeneralPieceGenTests } from "../piece-gen-test-util.spec";
 import { PieceGenType } from "../factory/piece-gen-data";
 
 describe(MemoryPieceGen.name, () => {
@@ -14,7 +14,7 @@ describe(MemoryPieceGen.name, () => {
     { size: 4, variant: 5, multiplier: 1 },
   ];
 
-  itShouldPassGenericTests(PieceGenType.MEMORY, (pieceGen: MemoryPieceGen, r2, p) => pieceGen.init(r2, p, 2));
+  itShouldPassGeneralPieceGenTests(PieceGenType.MEMORY, (pieceGen: MemoryPieceGen, r2, p) => pieceGen.init(r2, p, 2));
 
   it("should throw error if bag size >= memory size", () => {
     const pieceGen = container.resolve(MemoryPieceGen);
