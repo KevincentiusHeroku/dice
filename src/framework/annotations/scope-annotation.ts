@@ -15,6 +15,7 @@ export function scopeAnnotation<T>(scope: Scope, tags: any[]) {
       scope: scope,
       tags: tags,
 
+      containsMap: null!,
       providesMap: null!,
       requiresMap: null!,
     };

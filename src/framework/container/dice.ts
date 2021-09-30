@@ -14,12 +14,20 @@ export class Dice<T> {
     this.instance = new typeDesc.type();
     diceMap.set(this.instance, this);
     
+    // preconstruct provided dices
     this.typeDesc.providesMap.forEach((providesData, propertyKey) => {
       const providesTypeDesc = typeDescMap.get(providesData.type)!;
       let childDice = new Dice(this.container, this, providesTypeDesc);
       this.instance[propertyKey] = childDice.instance;
 
       this.provider.register(providesTypeDesc.type, childDice.instance, ...new Set(providesTypeDesc.tags.concat(providesData.tags)));
+    });
+
+    // preconstruct contained dices
+    this.typeDesc.containsMap.forEach((containsType, propertyKey) => {
+      const containsTypeDesc = typeDescMap.get(containsType)!;
+      let childDice = new Dice(this.container, this, containsTypeDesc);
+      this.instance[propertyKey] = childDice.instance;
     });
   }
 
@@ -28,6 +36,11 @@ export class Dice<T> {
   }
   
   autowire() {
+    // recursive autowiring of @contains fields
+    this.typeDesc.containsMap.forEach((containsType, propertyKey) => {
+      diceMap.get(this.instance[propertyKey])!.autowire();
+    });
+
     // recursive autowiring of @provides fields
     this.typeDesc.providesMap.forEach((providesData, propertyKey) => {
       diceMap.get(this.instance[propertyKey])!.autowire();

@@ -1,6 +1,7 @@
 import { Type, createQuery, DiceQuery } from "../container/type-desc";
 
 // global variables from decorators:
+export const typeToContainsMap = new Map<Type<any>, Map<string, Type<any>>>();
 export const typeToProvidesMap = new Map<Type<any>, Map<string, ProvidesData<any>>>();
 export const typeToRequiresMap = new Map<Type<any>, Map<string, DiceQuery>>();
 
@@ -9,30 +10,28 @@ export interface ProvidesData<T> {
   tags: any[];
 }
 
+export function contains<T>(containsType: Type<T>) {
+  return fieldAnnotation(typeToContainsMap, containsType);
+}
+
 export function provides<T>(providesType: Type<T>, ...tags: any) {
-  return function(target: Object, propertyKey: string) {
-    let type = target.constructor as Type<T>;
-
-    let providesMap = typeToProvidesMap.get(type);
-    if (!providesMap) {
-      providesMap = new Map();
-      typeToProvidesMap.set(type, providesMap);
-    }
-
-    providesMap.set(propertyKey, {type: providesType, tags});
-  };
+  return fieldAnnotation(typeToProvidesMap, {type: providesType, tags});
 }
 
 export function requires<T>(identifier: Type<T> | any) {
+  return fieldAnnotation(typeToRequiresMap, createQuery(identifier));
+}
+
+function fieldAnnotation<T>(typeToFieldMap: Map<Type<any>, Map<string, T>>, value: T) {
   return function(target: Object, propertyKey: string) {
     let type = target.constructor as Type<T>;
 
-    let requiresMap = typeToRequiresMap.get(type);
-    if (!requiresMap) {
-      requiresMap = new Map();
-      typeToRequiresMap.set(type, requiresMap);
+    let fieldMap = typeToFieldMap.get(type);
+    if (!fieldMap) {
+      fieldMap = new Map();
+      typeToFieldMap.set(type, fieldMap);
     }
 
-    requiresMap.set(propertyKey, createQuery(identifier));
-  };
+    fieldMap.set(propertyKey, value);
+  }
 }

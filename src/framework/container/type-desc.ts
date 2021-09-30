@@ -1,4 +1,4 @@
-import { ProvidesData, typeToProvidesMap, typeToRequiresMap } from "../annotations/field-annotation";
+import { ProvidesData, typeToContainsMap, typeToProvidesMap, typeToRequiresMap } from "../annotations/field-annotation";
 import { Dice } from "./dice";
 
 // global variables from decorators:
@@ -21,6 +21,7 @@ export interface TypeDesc<T> {
   scope: Scope;
   tags: any[];
 
+  containsMap: Map<string, Type<any>>;
   providesMap: Map<string, ProvidesData<any>>;
   requiresMap: Map<string, DiceQuery>;
 }
@@ -36,6 +37,9 @@ let typeDescMapInitialized = false;
 export function initializeTypeDescMap() {
   if (!typeDescMapInitialized) {
     typeDescMap.forEach((typeDesc, type) => {
+      // put entries of typeToContainsMap into typeDescMap
+      typeDesc.containsMap = typeToContainsMap.get(type) ?? new Map();
+
       // put entries of typeToProvidesMap into typeDescMap
       typeDesc.providesMap = typeToProvidesMap.get(type) ?? new Map();
 
