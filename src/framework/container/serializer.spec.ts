@@ -19,6 +19,8 @@ class TestSerializationSimple {
       set: new Set([4, 5, 6]),
     }
   };
+
+  public nonPersistent = 'badminton';
 }
 
 @dice()
@@ -101,6 +103,7 @@ describe(Dice.name + ' (serialization)', () => {
     expect(memento.val).toBe('cereal');
     expect(memento.obj.inn.arr[2]).toBe('three');
     expect(memento.obj.inn.set.has(5)).toBeTrue();
+    expect(memento.nonPersistent).toBeUndefined();
     return true;
-  }  
+  }
 });

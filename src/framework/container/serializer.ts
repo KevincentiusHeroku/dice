@@ -1,6 +1,6 @@
 
 import { singleton } from "../annotations/scope-annotation";
-import { diceMap, Type } from "./type-desc";
+import { createQuery, diceMap, Type } from "./type-desc";
 
 export interface Serializable {
   snapshot?(): any;
@@ -31,7 +31,7 @@ export class Serializer {
   }
 
   restore<T>(type: Type<T>, memento: any, parent?: any) {
-    const instance: any = diceMap.get(this)!.getContainer().resolve(type, parent);
+    const instance: any = diceMap.get(this)!.getContainer().resolveDice(createQuery(type), diceMap.get(parent));
 
     this.recursiveRestore(instance, memento);
 
