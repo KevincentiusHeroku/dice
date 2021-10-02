@@ -1,6 +1,7 @@
 import { provides, requires } from "../annotations/field-annotation";
 import { dice, singleton } from "../annotations/scope-annotation";
 import { Container } from "./container";
+import { Dice } from "./dice";
 
 interface TestNamedProvided {
   get(): number;
@@ -27,7 +28,7 @@ interface TestNamedProvided {
   @provides(TestNamedCalc2) public calc2!: TestNamedCalc2;
 }
 
-describe('Dice', () => {
+describe(Dice.name + ' (named)', () => {
   it('should recursively autowire named dices', () => {
     const container = new Container();
     const calc1: TestNamedCalc1 = container.resolve("test-named-calc-1");

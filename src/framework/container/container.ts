@@ -25,7 +25,7 @@ export class Container {
     });
   }
 
-  resolve(identifier: Type<any> | any) {
+  resolve(identifier: Type<any> | any, parent?: any) {
     return this.resolveQuery(createQuery(identifier));
   }
 
@@ -34,15 +34,19 @@ export class Container {
     if (selfProvided)
       // singleton
       return selfProvided;
-    else if (diceQuery.type)
+    else if (diceQuery.type) {
       // get dice by type
-      return new Dice(this, null, typeDescMap.get(diceQuery.type)!).getInstance();
-    else {
+      const dice = new Dice(this, null, typeDescMap.get(diceQuery.type)!);
+      dice.autowire();
+      return dice.getInstance();
+    } else {
       // get dice by tag
       const candidates = typeDescByTag.get(diceQuery.tag)!;
-      if (candidates.length === 1)
-        return new Dice(this, null, candidates[0]).getInstance();
-      else
+      if (candidates.length === 1) {
+        const dice = new Dice(this, null, candidates[0]);
+        dice.autowire();
+        return dice.getInstance();
+      } else
         throw new Error(`Cannot resolve dice because ${candidates.length} dices were found for tag ${diceQuery.tag}`);
     }
   }

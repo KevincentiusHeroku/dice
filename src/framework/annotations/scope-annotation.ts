@@ -18,6 +18,7 @@ export function scopeAnnotation<T>(scope: Scope, tags: any[]) {
       containsMap: null!,
       providesMap: null!,
       requiresMap: null!,
+      persistentFields: null!,
     };
 
     const typeDesc = typeDescMap.get(type);

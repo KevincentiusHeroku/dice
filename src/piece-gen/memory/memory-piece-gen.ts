@@ -72,9 +72,9 @@ export class MemoryPieceGen extends PieceGen {
 
     const d = this.data;
 
-    let r = this.r.int(d.bag.length);
-    let ret = d.bag[r];
-    d.bag[r] = d.mem[d.nextMemId];
+    let i = this.r.int(d.bag.length);
+    let ret = d.bag[i];
+    d.bag[i] = d.mem[d.nextMemId];
     d.mem[d.nextMemId] = ret;
     d.nextMemId = (d.nextMemId + 1) % d.mem.length;
     return ret;

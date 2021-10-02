@@ -31,9 +31,9 @@ export class Dice<T> {
     });
   }
 
-  getInstance(): any {
-    return this.instance;
-  }
+  getContainer() { return this.container; }
+  getTypeDesc() { return this.typeDesc; }
+  getInstance() { return this.instance; }
   
   autowire() {
     // recursive autowiring of @contains fields

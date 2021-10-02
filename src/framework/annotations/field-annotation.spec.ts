@@ -1,4 +1,4 @@
-import { contains, provides, requires, typeToContainsMap, typeToProvidesMap, typeToRequiresMap } from "./field-annotation";
+import { contains, persistent, provides, requires, typeToContainsMap, typeToPersistentMap, typeToProvidesMap, typeToRequiresMap } from "./field-annotation";
 import { dice } from "./scope-annotation";
 
 @dice()
@@ -19,6 +19,9 @@ class TestRedService {
   @provides(TestYellowService, 'lights') private testYellowService!: TestYellowService;
   @requires(TestExtService) private testExtService!: TestExtService;
   @contains(TestContainedService) private testContainedService!: TestContainedService;
+
+  @persistent() private testPersistentNum = 5;
+  @persistent() private testPersistentObj = { x: 'is me', y: { map: new Map(), arr: [ 1, 2, 3 ] } };
 }
 
 describe('Provides annotation', () => {
@@ -49,5 +52,13 @@ describe('Provides annotation', () => {
     const extField = requiresMap.get('testExtService')!;
     expect(extField.type).toBe(TestExtService);
     expect(extField.tag).toBeFalsy();
-  })
+  });
+
+  it('should register persistent fields in typeToPersistentMap', () => {
+    let persistentMap = typeToPersistentMap.get(TestRedService)!;
+    expect(persistentMap).toBeTruthy();
+
+    expect(persistentMap.has('testPersistentNum')).toBeTrue();
+    expect(persistentMap.has('testPersistentObj')).toBeTrue();
+  });
 });

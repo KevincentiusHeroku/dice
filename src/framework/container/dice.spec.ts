@@ -1,6 +1,7 @@
 import { contains, provides, requires } from "../annotations/field-annotation";
 import { dice, singleton } from "../annotations/scope-annotation";
 import { Container } from "./container";
+import { Dice } from "./dice";
 
 @dice() class DiceTestProvidedByAll {}
 @dice() class DiceTestProvidedByChild {}
@@ -39,7 +40,7 @@ import { Container } from "./container";
   @provides(DiceTestChild) public child!: DiceTestChild;
 }
 
-describe('Dice', () => {
+describe(Dice.name, () => {
   it('should recursively autowire dices', () => {
     const container = new Container();
 
