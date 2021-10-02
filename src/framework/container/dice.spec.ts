@@ -2,16 +2,17 @@ import { contains, provides, requires } from "../annotations/field-annotation";
 import { dice, singleton } from "../annotations/scope-annotation";
 import { Container } from "./container";
 import { Dice } from "./dice";
+import { DiceTestParent } from "./dice.data.spec";
 
-@dice() class DiceTestProvidedByAll {}
-@dice() class DiceTestProvidedByChild {}
-@dice() class DiceTestProvidedByParent {}
-@dice() class DiceTestProvidedByParentOnly {
+@dice() export class DiceTestProvidedByAll {}
+@dice() export class DiceTestProvidedByChild {}
+@dice() export class DiceTestProvidedByParent {}
+@dice() export class DiceTestProvidedByParentOnly {
   @contains(DiceTestProvidedByAll) providedByAll!: DiceTestProvidedByAll;
 }
-@singleton() class DiceTestSingleton {}
+@singleton() export class DiceTestSingleton {}
 
-@dice() class DiceTestGrandchild {
+@dice() export class DiceTestGrandchild {
   @provides(DiceTestProvidedByAll) public providedByAll!: DiceTestProvidedByAll;
   @requires(DiceTestProvidedByChild) public providedByChild!: DiceTestProvidedByChild;
   @requires(DiceTestProvidedByParent) public providedByParent!: DiceTestProvidedByParent;
@@ -20,7 +21,7 @@ import { Dice } from "./dice";
   @requires(DiceTestSingleton) public singleton!: DiceTestSingleton;
 }
 
-@dice() class DiceTestChild {
+@dice() export class DiceTestChild {
   @provides(DiceTestProvidedByAll) public providedByAll!: DiceTestProvidedByAll;
   @provides(DiceTestProvidedByChild) public providedByChild!: DiceTestProvidedByChild;
   @requires(DiceTestProvidedByParent) public providedByParent!: DiceTestProvidedByParent;
@@ -28,16 +29,7 @@ import { Dice } from "./dice";
 
   @requires(DiceTestSingleton) public singleton!: DiceTestSingleton;
   @provides(DiceTestGrandchild) public grandChild!: DiceTestGrandchild;
-}
-
-@singleton() class DiceTestParent {
-  @provides(DiceTestProvidedByAll) public providedByAll!: DiceTestProvidedByAll;
-  @provides(DiceTestProvidedByChild) public providedByChild!: DiceTestProvidedByChild;
-  @provides(DiceTestProvidedByParent) public providedByParent!: DiceTestProvidedByParent;
-  @provides(DiceTestProvidedByParentOnly) public providedByParentOnly!: DiceTestProvidedByParentOnly;
-
-  @requires(DiceTestSingleton) public singleton!: DiceTestSingleton;
-  @provides(DiceTestChild) public child!: DiceTestChild;
+  @requires('dice-test-parent') public parent!: DiceTestParent;
 }
 
 describe(Dice.name, () => {
@@ -67,6 +59,7 @@ describe(Dice.name, () => {
     expect(child.providedByParentOnly == parent.providedByParentOnly)
       .withContext('child declares the field with @contains rather than @requires, so it should get a new instance')
       .toBeFalse();
+    expect(child.parent).toBe(parent);
 
     const grandChild = child.grandChild;
     expect(grandChild instanceof DiceTestGrandchild).toBeTrue();

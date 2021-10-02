@@ -14,6 +14,8 @@ export class Dice<T> {
     this.instance = new typeDesc.type();
     diceMap.set(this.instance, this);
     
+    this.provider.register(this.typeDesc.type, this.instance, this.typeDesc.tags);
+
     // preconstruct provided dices
     this.typeDesc.providesMap.forEach((providesData, propertyKey) => {
       const providesTypeDesc = typeDescMap.get(providesData.type)!;
