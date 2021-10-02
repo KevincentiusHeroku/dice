@@ -1,4 +1,5 @@
 import { singleton } from "tsyringe";
+import { Mat } from "../matrix/mat";
 import { Tile } from "../tile/tile";
 import { Piece, PieceId } from "./piece";
 import { PIECES } from "./piece-data";
@@ -23,12 +24,9 @@ export class PieceFactory {
         };
     }
   
-    return {
-        tiles: mat,
-        id: {
-          size,
-          variant: variant
-        }
-    };
+    const tiles = new Mat<Tile>(1, 1);
+    tiles.copy(mat);
+    
+    return new Piece({size, variant}, tiles);
   }
 }

@@ -20,7 +20,7 @@ interface MemoryPieceGenSnapshot extends PieceGenSnapshot {
 }
 
 @injectable()
-export class MemoryPieceGen implements PieceGen {
+export class MemoryPieceGen extends PieceGen {
   private r: RandomGen | undefined;
   private data: MemoryPieceGenSnapshot = {
     type: PieceGenType.MEMORY,
@@ -32,7 +32,9 @@ export class MemoryPieceGen implements PieceGen {
   constructor(
     private pieceFactory: PieceFactory,
     private util: PieceGenUtil
-  ) {}
+  ) {
+    super();
+  }
 
   snapshot(): MemoryPieceGenSnapshot {
     return deepCopy(this.data);
@@ -70,9 +72,9 @@ export class MemoryPieceGen implements PieceGen {
 
     const d = this.data;
 
-    let r = this.r.int(d.bag.length);
-    let ret = d.bag[r];
-    d.bag[r] = d.mem[d.nextMemId];
+    let i = this.r.int(d.bag.length);
+    let ret = d.bag[i];
+    d.bag[i] = d.mem[d.nextMemId];
     d.mem[d.nextMemId] = ret;
     d.nextMemId = (d.nextMemId + 1) % d.mem.length;
     return ret;

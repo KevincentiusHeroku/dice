@@ -24,4 +24,3 @@
 # Karma test
 
 `npx karma start`
-

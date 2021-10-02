@@ -1,5 +1,13 @@
 
-export class Mat<T> extends Array<Array<T | null>> {
+import { deepCopy } from "deep-copy-ts";
+
+export function matWrap<T>(arr: Array<Array<T | null>>): Mat<T> {
+  const mat = new Mat<T>(1, 1);
+  mat.copy(arr);
+  return mat;
+}
+
+export class Mat<T> extends Array<Array<T | null>> implements Snapshotable {
   constructor(height: number, width: number) {
     if (height == 0) {
       throw new Error('The matrix height cannot be 0!');
@@ -9,6 +17,15 @@ export class Mat<T> extends Array<Array<T | null>> {
     for (let i = 0; i < this.length; i++) {
       this[i] = new Array(width);
     }
+  }
+  
+  snapshot(): Array<Array<T | null>> {
+    return deepCopy(this);
+  }
+
+  restore(snapshot: Array<Array<T | null>>): Snapshotable {
+    this.copy(snapshot);
+    return this;
   }
 
   rotate() {
@@ -62,8 +79,17 @@ export class Mat<T> extends Array<Array<T | null>> {
     }
   }
 
-  copy(other: T[][]) {
+  copy(other: Array<Array<T | null>>) {
+    this.length = other.length;
     for (let i = 0; i < this.length; i++) {
+      // set row length
+      if (this[i] == null) {
+        this[i] = new Array(other[i].length);
+      } else {
+        this[i].length = other[i].length;
+      }
+
+      // copy cell values
       for (let j = 0; j < this[i].length; j++) {
         this[i][j] = other[i][j];
       }

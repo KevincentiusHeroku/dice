@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { BagPieceGen } from "./bag-piece-gen";
-import { itShouldPassGenericTests } from "../piece-gen-test-util.spec";
+import { itShouldPassGeneralPieceGenTests } from "../piece-gen-test-util.spec";
 import { container } from "tsyringe";
 import { RandomGen } from "../../random-gen/random-gen";
 import { PieceList } from "../piece-gen";
@@ -15,7 +15,7 @@ describe(BagPieceGen.name, () => {
     { size: 4, variant: 5, multiplier: 2 },
   ];
 
-  itShouldPassGenericTests(PieceGenType.BAG, (pieceGen: BagPieceGen, rd, p) => pieceGen.init(rd, p));
+  itShouldPassGeneralPieceGenTests(PieceGenType.BAG, (pieceGen: BagPieceGen, rd, p) => pieceGen.init(rd, p));
 
   it('should generate one of each piece', () => {
     const pieceGen = container.resolve(BagPieceGen);

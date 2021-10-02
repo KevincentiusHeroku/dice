@@ -19,3 +19,5 @@ export interface PieceGen extends Snapshotable {
   next(): Piece;
   nextId(): PieceId;
 }
+export abstract class PieceGen implements Snapshotable {
+}

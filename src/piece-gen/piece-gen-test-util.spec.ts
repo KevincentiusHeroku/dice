@@ -6,7 +6,7 @@ import { PieceGenFactory } from "./factory/piece-gen-factory";
 import { NotInitializedError, PieceGen, PieceList } from "./piece-gen";
 
 
-export function itShouldPassGenericTests<T extends PieceGen>(
+export function itShouldPassGeneralPieceGenTests<T extends PieceGen>(
   type: PieceGenType,
   initCallback: (pieceGen: T, r: RandomGen, p: PieceList[]) => void
 ) {

@@ -9,7 +9,7 @@ import { PieceGenUtil } from "../util/piece-gen-util";
 interface RandomPieceGenSnapshot extends PieceGenSnapshot {}
 
 @injectable()
-export class RandomPieceGen implements PieceGen {
+export class RandomPieceGen extends PieceGen {
   public static TYPE = PieceGenType.RANDOM;
   private r: RandomGen | undefined;
   private bag: PieceId[] = [];
@@ -17,7 +17,9 @@ export class RandomPieceGen implements PieceGen {
   constructor(
     private pieceFactory: PieceFactory,
     private util: PieceGenUtil
-  ) {}
+  ) {
+    super();
+  }
   
   snapshot(): RandomPieceGenSnapshot {
     return {
