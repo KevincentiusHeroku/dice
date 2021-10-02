@@ -1,4 +1,4 @@
-import { Scope, Type, TypeDesc, typeDescByTag, typeDescMap } from "../container/type-desc";
+import { Scope, Type, TypeDesc, typeDescByTag, typeDescMap } from "./type-desc";
 
 export function dice<T>(...tags: any[]) {
   return scopeAnnotation<T>(Scope.DICE, tags);

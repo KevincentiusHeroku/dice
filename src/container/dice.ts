@@ -1,6 +1,6 @@
 import { Container } from "./container";
 import { Provider } from "./provider";
-import { diceMap, DiceQuery, TypeDesc, typeDescMap } from "./type-desc";
+import { diceMap, DiceQuery, TypeDesc, typeDescMap } from "../annotations/type-desc";
 
 export class Dice<T> {
   private instance: any;

@@ -1,4 +1,4 @@
-import { Type, createQuery, DiceQuery } from "../container/type-desc";
+import { Type, createQuery, DiceQuery } from "../annotations/type-desc";
 
 // global variables from decorators:
 export const typeToContainsMap = new Map<Type<any>, Map<string, Type<any>>>();

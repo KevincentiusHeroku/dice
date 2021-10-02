@@ -1,6 +1,6 @@
 
 import { singleton } from "../annotations/scope-annotation";
-import { createQuery, diceMap, Type } from "./type-desc";
+import { createQuery, diceMap, Type } from "../annotations/type-desc";
 
 export interface Serializable {
   snapshot?(): any;

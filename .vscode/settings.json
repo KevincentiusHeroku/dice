@@ -1,6 +1,6 @@
 {
   "editor.tabSize": 2,
   "sonarlint.connectedMode.project": {
-    "projectKey": "TDS-Engine"
+    "projectKey": "Dice"
   }
 }

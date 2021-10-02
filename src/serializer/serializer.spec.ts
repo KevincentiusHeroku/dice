@@ -1,7 +1,7 @@
 import { contains, persistent, provides, requires } from "../annotations/field-annotation";
 import { dice, singleton } from "../annotations/scope-annotation";
-import { Container } from "./container";
-import { Dice } from "./dice";
+import { Container } from "../container/container";
+import { Dice } from "../container/dice";
 import { Serializer } from "./serializer";
 
 @dice()

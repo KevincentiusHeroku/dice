@@ -1,4 +1,4 @@
-import { createQuery, Scope, Type, typeDescMap } from "../container/type-desc";
+import { createQuery, Scope, Type, typeDescMap } from "../annotations/type-desc";
 import { Provider } from "./provider";
 
 class ProviderTestClass {}

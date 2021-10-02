@@ -1,5 +1,5 @@
 import { ProvidesData, typeToContainsMap, typeToPersistentMap, typeToProvidesMap, typeToRequiresMap } from "../annotations/field-annotation";
-import { Dice } from "./dice";
+import { Dice } from "../container/dice";
 
 // global variables from decorators:
 export const typeDescMap = new Map<Type<any>, TypeDesc<any>>();

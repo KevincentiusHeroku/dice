@@ -1,6 +1,6 @@
-import { contains, persistent, provides, requires } from "../annotations/field-annotation";
-import { dice, singleton } from "../annotations/scope-annotation";
-import { initializeTypeDescMap, typeDescMap } from "../container/type-desc";
+import { contains, persistent, provides, requires } from "./field-annotation";
+import { dice, singleton } from "./scope-annotation";
+import { initializeTypeDescMap, typeDescMap } from "./type-desc";
 
 @dice('tag-grandchild')
 class TestDiceGrandchild {}

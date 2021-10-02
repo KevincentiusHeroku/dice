@@ -1,6 +1,6 @@
 import { Dice } from "./dice";
 import { Provider } from "./provider";
-import { createQuery, diceMap, DiceQuery, initializeTypeDescMap, Scope, Type, typeDescByTag, typeDescMap } from "./type-desc";
+import { createQuery, diceMap, DiceQuery, initializeTypeDescMap, Scope, Type, typeDescByTag, typeDescMap } from "../annotations/type-desc";
 
 export class Container {
   private provider: Provider = new Provider();

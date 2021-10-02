@@ -1,4 +1,4 @@
-import { Scope, typeDescMap } from "../container/type-desc";
+import { Scope, typeDescMap } from "./type-desc";
 import { dice, singleton } from "./scope-annotation";
 
 @dice('tag1', 'tag2')

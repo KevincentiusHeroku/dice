@@ -1,4 +1,4 @@
-import { DiceQuery, Type } from "./type-desc";
+import { DiceQuery, Type } from "../annotations/type-desc";
 
 export class Provider {
   instanceByType = new Map<Type<any>, any[]>();
