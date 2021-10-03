@@ -27,7 +27,7 @@ Serialization can be done by using the Serializer class (get it via `@requires` 
 ## Deployment
 
     npm install
-    npx tsc
+    npm run build
     npm publish
 
 ## Sonar Setup

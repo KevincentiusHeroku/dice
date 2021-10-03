@@ -1,10 +1,10 @@
 {
   "name": "vkg-dice",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "karma start",
-    "build": "tsc"
+    "build": "tsc -d --declarationDir dist --declarationMap --emitDeclarationOnly"
   },
   "private": false,
   "references": [],
