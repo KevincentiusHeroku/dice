@@ -24,6 +24,12 @@ Serialization can be done by using the Serializer class (get it via `@requires` 
 
 # Development notes
 
+## Deployment
+
+    npm install
+    npx tsc
+    npm publish
+
 ## Sonar Setup
 
 - Install SonarLint extension in VS Code
