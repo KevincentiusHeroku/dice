@@ -1,6 +1,6 @@
 {
   "name": "vkg-dice",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "karma start",
@@ -17,7 +17,6 @@
     "karma-jasmine": "^4.0.1",
     "karma-jasmine-html-reporter": "^1.7.0",
     "karma-typescript": "^5.5.1",
-    "nodemon": "^2.0.11",
     "spec": "^1.0.1",
     "ts-node": "^10.0.0",
     "tsc": "^2.0.3",
@@ -26,12 +25,6 @@
   "dependencies": {
     "@types/seedrandom": "^3.0.1",
     "deep-copy-ts": "^0.5.0",
-    "jasmine-ts": "^0.4.0",
-    "nyc": "^15.1.0",
-    "reflect-metadata": "^0.1.13",
-    "seedrandom": "^3.0.5",
-    "ts-mockito": "^2.6.1",
-    "tsyringe": "^4.6.0",
-    "typescript-logging": "^1.0.0"
+    "jasmine-ts": "^0.4.0"
   }
 }
