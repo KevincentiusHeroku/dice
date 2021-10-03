@@ -1,10 +1,10 @@
 {
-  "name": "tds-engine",
+  "name": "vkg-dice",
   "version": "0.0.1",
   "scripts": {
     "test": "karma start"
   },
-  "private": true,
+  "private": false,
   "references": [],
   "devDependencies": {
     "@types/jasmine": "^3.8.1",
