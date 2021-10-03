@@ -1,6 +1,7 @@
 {
   "name": "vkg-dice",
   "version": "0.0.5",
+  "types": "build/index.d.ts",
   "scripts": {
     "test": "karma start",
     "build": "tsc"
