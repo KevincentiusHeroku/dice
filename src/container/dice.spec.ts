@@ -1,6 +1,6 @@
 import { contains, provides, requires } from "../annotations/field-annotation";
 import { dice, singleton } from "../annotations/scope-annotation";
-import { Container } from "./container";
+import { ContainerImpl, createContainer } from "./container";
 import { Dice } from "./dice";
 import { DiceTestParent } from "./dice.data.spec";
 
@@ -34,7 +34,7 @@ import { DiceTestParent } from "./dice.data.spec";
 
 describe(Dice.name, () => {
   it('should recursively autowire dices', () => {
-    const container = new Container();
+    const container = createContainer();
 
     const sing: DiceTestSingleton = container.resolve(DiceTestSingleton);
     expect(sing instanceof DiceTestSingleton).toBeTrue();

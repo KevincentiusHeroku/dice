@@ -2,7 +2,12 @@ import { Dice } from "./dice";
 import { Provider } from "./provider";
 import { createQuery, diceMap, DiceQuery, initializeTypeDescMap, Scope, Type, typeDescByTag, typeDescMap } from "../annotations/type-desc";
 
-export class Container {
+export interface Container {
+  resolve<T>(type: Type<T>): T;
+  resolveTag(tag: any): any;
+}
+
+export class ContainerImpl {
   private provider: Provider = new Provider();
 
   constructor() {
@@ -25,7 +30,15 @@ export class Container {
     });
   }
 
-  resolve(identifier: Type<any> | any) {
+  resolve<T>(type: Type<T>): T {
+    return this.resolveIdentifier(type);
+  }
+
+  resolveTag(tag: any) {
+    return this.resolveIdentifier(tag);
+  }
+
+  resolveIdentifier(identifier: Type<any> | any) {
     return this.resolveQuery(createQuery(identifier));
   }
 
@@ -54,21 +67,9 @@ export class Container {
       return selfProvided;
     else
       return this.resolveDice(diceQuery, null);
-
-    // else if (diceQuery.type) {
-    //   // get dice by type
-    //   const dice = new Dice(this, null, typeDescMap.get(diceQuery.type)!);
-    //   dice.autowire();
-    //   return dice.getInstance();
-    // } else {
-    //   // get dice by tag
-    //   const candidates = typeDescByTag.get(diceQuery.tag)!;
-    //   if (candidates.length === 1) {
-    //     const dice = new Dice(this, null, candidates[0]);
-    //     dice.autowire();
-    //     return dice.getInstance();
-    //   } else
-    //     throw new Error(`Cannot resolve dice because ${candidates.length} dices were found for tag ${diceQuery.tag}`);
-    // }
   }
+}
+
+export function createContainer(): Container {
+  return new ContainerImpl();
 }

@@ -1,6 +1,6 @@
 import { provides, requires } from "../annotations/field-annotation";
 import { dice } from "../annotations/scope-annotation";
-import { Container } from "../container/container";
+import { ContainerImpl, createContainer } from "../container/container";
 import { Serializer } from "./serializer";
 
 enum Types {
@@ -26,7 +26,7 @@ interface Shouter { shout(): string; }
 
 describe(Serializer.name + ' (child)', () => {
   it('should ', () => {
-    const container = new Container();
+    const container = createContainer();
     const serializer: Serializer = container.resolve(Serializer);
     const parent1 = container.resolve(SerializerChildTestParent1);
     const parent2 = container.resolve(SerializerChildTestParent2);

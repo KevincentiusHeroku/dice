@@ -1,4 +1,4 @@
-import { Container } from "./container";
+import { ContainerImpl } from "./container";
 import { Provider } from "./provider";
 import { diceMap, DiceQuery, TypeDesc, typeDescMap } from "../annotations/type-desc";
 
@@ -7,7 +7,7 @@ export class Dice<T> {
   private provider: Provider = new Provider();
   
   constructor(
-    private container: Container,
+    private container: ContainerImpl,
     private parent: Dice<any> | null,
     private typeDesc: TypeDesc<T>
   ) {

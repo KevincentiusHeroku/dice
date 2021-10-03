@@ -1,6 +1,6 @@
 import { contains, persistent, provides, requires } from "../annotations/field-annotation";
 import { dice, singleton } from "../annotations/scope-annotation";
-import { Container } from "../container/container";
+import { ContainerImpl, createContainer } from "../container/container";
 import { Dice } from "../container/dice";
 import { Serializer } from "./serializer";
 
@@ -46,7 +46,7 @@ class TestSerializationParent {
 
 describe(Dice.name + ' (serialization)', () => {
   it('should serialize @persistent fields in a dice', () => {
-    const container = new Container();
+    const container = createContainer();
     const serializer: Serializer = container.resolve(Serializer);
     
     const before = container.resolve(TestSerializationSimple);
@@ -56,7 +56,7 @@ describe(Dice.name + ' (serialization)', () => {
   });
 
   it('should recursively serialize @contains and @provides fields in a dice, but not @requires fields', () => {
-    const container = new Container();
+    const container = createContainer();
     const serializer: Serializer = container.resolve(Serializer);
 
     const before = container.resolve(TestSerializationParent);
@@ -69,7 +69,7 @@ describe(Dice.name + ' (serialization)', () => {
   });
   
   it('should restore the values of @persistent fields in a dice', () => {
-    const container = new Container();
+    const container = createContainer();
     const serializer: Serializer = container.resolve(Serializer);
     
     const val = [5,7,9];
@@ -81,7 +81,7 @@ describe(Dice.name + ' (serialization)', () => {
   });
 
   it('should recursively restore @contains and @provides fields and autowire @requires fields', () => {
-    const container = new Container();
+    const container = createContainer();
     const serializer: Serializer = container.resolve(Serializer);
     
     const testProvided = ['test4', 'test5', 'test6'];

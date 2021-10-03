@@ -1,6 +1,6 @@
 import { provides, requires } from "../annotations/field-annotation";
 import { dice, singleton } from "../annotations/scope-annotation";
-import { Container } from "./container";
+import { ContainerImpl, createContainer } from "./container";
 import { Dice } from "./dice";
 
 interface TestNamedProvided {
@@ -30,8 +30,8 @@ interface TestNamedProvided {
 
 describe(Dice.name + ' (named)', () => {
   it('should recursively autowire named dices', () => {
-    const container = new Container();
-    const calc1: TestNamedCalc1 = container.resolve("test-named-calc-1");
+    const container = createContainer();
+    const calc1: TestNamedCalc1 = container.resolveTag("test-named-calc-1");
 
     expect(calc1 instanceof TestNamedCalc1).toBeTrue();
     expect(calc1.provided1 instanceof TestNamedProvided1).toBeTrue();

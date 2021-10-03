@@ -1,6 +1,6 @@
 import { contains, requires } from "../annotations/field-annotation";
 import { dice, singleton } from "../annotations/scope-annotation";
-import { Container } from "./container";
+import { ContainerImpl, createContainer } from "./container";
 
 @singleton()
 class ContainerSpecRequiredSingleton {}
@@ -9,7 +9,7 @@ class ContainerSpecRequiredSingleton {}
 class ContainerSpecContainedDice {}
 
 
-@singleton()
+@singleton('container-spec-singleton')
 class ContainerSpecSingleton {
   @requires(ContainerSpecRequiredSingleton) public requiredSingleton!: ContainerSpecRequiredSingleton;
   @contains(ContainerSpecContainedDice) public containedDice!: ContainerSpecContainedDice;
@@ -38,74 +38,76 @@ class ContainerSpecDuplicateSingleton2 {}
 
 describe('Container', () => {
   it('should provide an autowired instance when queried for singleton by type', () => {
-    const container = new Container();
-    const sing: ContainerSpecSingleton = container.resolve(ContainerSpecSingleton);
+    const container = createContainer() as ContainerImpl;
+    const sing: ContainerSpecSingleton = container.resolveIdentifier(ContainerSpecSingleton);
     expectAutowired(sing);
   });
 
   it('should provide the same instance everytime when queried for singleton by type', () => {
-    let container = new Container();
+    const container = createContainer() as ContainerImpl;
 
-    let singleton1 = container.resolve(ContainerSpecSingleton);
-    let singleton2 = container.resolve(ContainerSpecSingleton);
-    expect(singleton1 === singleton2).toBeTrue();
+    let singleton1 = container.resolveIdentifier(ContainerSpecSingleton);
     expect(singleton1 instanceof ContainerSpecSingleton).toBeTrue();
+    expect(container.resolveIdentifier(ContainerSpecSingleton)).toBe(singleton1);
+    expect(container.resolve(ContainerSpecSingleton)).toBe(singleton1);
+    expect(container.resolveTag('container-spec-singleton')).toBe(singleton1);
   });
 
   it('should provide the same instance everytime when queried for singleton by tag', () => {
-    let container = new Container();
+    const container = createContainer() as ContainerImpl;
 
-    let singleton1 = container.resolve('container-spec-tagged-service');
-    let singleton2 = container.resolve('container-spec-tagged-service');
+    let singleton1 = container.resolveIdentifier('container-spec-tagged-service');
+    let singleton2 = container.resolveIdentifier('container-spec-tagged-service');
     expect(singleton1 === singleton2).toBeTrue();
     expect(singleton1 instanceof ContainerSpecTaggedSingleton).toBeTrue();
   });
 
   it('should provide the same instance everytime when queried for singleton by either type or tag', () => {
-    let container = new Container();
+    const container = createContainer() as ContainerImpl;
 
-    let singleton1 = container.resolve(ContainerSpecTaggedSingleton);
-    let singleton2 = container.resolve('container-spec-tagged-service');
+    let singleton1 = container.resolveIdentifier(ContainerSpecTaggedSingleton);
+    let singleton2 = container.resolveIdentifier('container-spec-tagged-service');
     expect(singleton1 === singleton2).toBeTrue();
     expect(singleton1 instanceof ContainerSpecTaggedSingleton).toBeTrue();
   });
 
   it('should provide an autowired instance when queried for dice by type', () => {
-    const container = new Container();
-    const dice1 = container.resolve(ContainerSpecDice);
+    const container = createContainer() as ContainerImpl;
+    const dice1 = container.resolveIdentifier(ContainerSpecDice);
     expectAutowired(dice1);
   });
 
   it('should provide an autowired instance when queried for dice by tag', () => {
-    const container = new Container();
-    const dice1 = container.resolve('container-spec-tagged-dice');
+    const container = createContainer() as ContainerImpl;
+    const dice1 = container.resolveIdentifier('container-spec-tagged-dice');
     expectAutowired(dice1);
   });
 
   it('should provide a new instance everytime when queried for dice by type', () => {
-    let container = new Container();
+    const container = createContainer() as ContainerImpl;
 
-    let dice1 = container.resolve(ContainerSpecDice);
-    let dice2 = container.resolve(ContainerSpecDice);
+    let dice1 = container.resolveIdentifier(ContainerSpecDice);
+    let dice2 = container.resolveIdentifier(ContainerSpecDice);
     expect(dice1 === dice2).toBeFalse();
     expect(dice1 instanceof ContainerSpecDice).toBeTrue();
   });
 
   it('should provide a new instance everytime when queried for dice by tag', () => {
-    let container = new Container();
+    const container = createContainer() as ContainerImpl;
 
-    let dice1 = container.resolve('container-spec-tagged-dice');
-    let dice2 = container.resolve('container-spec-tagged-dice');
+    let dice1 = container.resolveIdentifier('container-spec-tagged-dice');
+    let dice2 = container.resolveIdentifier('container-spec-tagged-dice');
     expect(dice1 === dice2).toBeFalse();
     expect(dice1 instanceof ContainerSpecTaggedDice).toBeTrue();
   });
 
   it('should throw an error if multiple instances matches the query', () => {
-    let container = new Container();
+    const container = createContainer() as ContainerImpl;
 
-    expect(() => container.resolve('container-spec-duplicate-singleton')).toThrow();
+    expect(() => container.resolveIdentifier('container-spec-duplicate-singleton')).toThrow();
   })
 });
+
 function expectAutowired(sing: ContainerSpecSingleton) {
   expect(sing).toBeTruthy();
   expect(sing.requiredSingleton instanceof ContainerSpecRequiredSingleton).toBeTrue();

@@ -1,6 +1,6 @@
 import { persistent, provides, requires } from "../annotations/field-annotation";
 import { dice } from "../annotations/scope-annotation";
-import { Container } from "../container/container";
+import { ContainerImpl, createContainer } from "../container/container";
 import { Serializer } from "./serializer";
 
 @dice()
@@ -33,7 +33,7 @@ class SnapshotTestParent {
 
 describe(Serializer + ' (snapshot/restore)', () => {
   it('should persist both @persistent fields and snapshot()', () => {
-    const container = new Container();
+    const container = createContainer();
     const serializer: Serializer = container.resolve(Serializer);
     const parent: SnapshotTestParent = container.resolve(SnapshotTestParent)!;
     

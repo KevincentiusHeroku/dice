@@ -30,7 +30,7 @@ export class Serializer {
     return memento;
   }
 
-  restore<T>(type: Type<T>, memento: any, parent?: any) {
+  restore<T>(type: Type<T>, memento: any, parent?: any): T {
     const instance: any = diceMap.get(this)!.getContainer().resolveDice(createQuery(type), diceMap.get(parent));
 
     this.recursiveRestore(instance, memento);
