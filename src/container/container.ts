@@ -3,8 +3,8 @@ import { Provider } from "./provider";
 import { createQuery, diceMap, DiceQuery, initializeTypeDescMap, Scope, Type, typeDescByTag, typeDescMap } from "../annotations/type-desc";
 
 export interface Container {
-  resolve<T>(type: Type<T>): T;
-  resolveTag(tag: any): any;
+  resolve<T>(type: Type<T>): () => T;
+  resolveTag(tag: any): () => any;
 }
 
 export class ContainerImpl {
@@ -17,50 +17,50 @@ export class ContainerImpl {
     typeDescMap.forEach((typeDesc, type) => {
       if (typeDesc.scope === Scope.SINGLETON) {
         const dice = new Dice(this, null, typeDesc);
-        this.provider.register(typeDesc.type, dice.getInstance(), ...typeDesc.tags);
+        this.provider.register(typeDesc.type, () => dice.getInstance(), ...typeDesc.tags);
       }
     });
 
     // autowire singletons
     typeDescMap.forEach((typeDesc, type) => {
       if (typeDesc.scope === Scope.SINGLETON) {
-        const instance = this.provider.get({type});
-        diceMap.get(instance)!.autowire();
+        const getter = this.provider.get({type});
+        diceMap.get(getter())!.autowire();
       }
     });
   }
 
-  resolve<T>(type: Type<T>): T {
+  resolve<T>(type: Type<T>): () => T {
     return this.resolveIdentifier(type);
   }
 
-  resolveTag(tag: any) {
+  resolveTag(tag: any): () => any {
     return this.resolveIdentifier(tag);
   }
 
-  resolveIdentifier(identifier: Type<any> | any) {
+  resolveIdentifier(identifier: Type<any> | any): () => any {
     return this.resolveQuery(createQuery(identifier));
   }
 
-  resolveDice(diceQuery: DiceQuery, parent?: any) {
+  resolveDice(diceQuery: DiceQuery, parent?: any): () => any {
     if (diceQuery.type) {
       // get dice by type
       const dice = new Dice(this, parent, typeDescMap.get(diceQuery.type)!);
       dice.autowire();
-      return dice.getInstance();
+      return () => dice.getInstance();
     } else {
       // get dice by tag
       const candidates = typeDescByTag.get(diceQuery.tag)!;
       if (candidates.length === 1) {
         const dice = new Dice(this, parent, candidates[0]);
         dice.autowire();
-        return dice.getInstance();
+        return () => dice.getInstance();
       } else
         throw new Error(`Cannot resolve dice because ${candidates.length} dices were found for tag ${diceQuery.tag}`);
     }
   }
 
-  resolveQuery(diceQuery: DiceQuery): any {
+  resolveQuery(diceQuery: DiceQuery): () => any {
     const selfProvided = this.provider.getIfExists(diceQuery);
     if (selfProvided)
       // singleton

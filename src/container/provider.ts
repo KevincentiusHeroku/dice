@@ -1,65 +1,65 @@
 import { DiceQuery, Type } from "../annotations/type-desc";
 
 export class Provider {
-  instanceByType = new Map<Type<any>, any[]>();
-  instanceByTag = new Map<any, any[]>();
+  getterByType = new Map<Type<any>, (() => any)[]>();
+  getterByTag = new Map<any, (() => any)[]>();
 
-  register(type: Type<any>, instance: any, ...tags: any[]) {
-    this.registerByType(instance, type);
-    this.registerByTags(instance, tags);
+  register(type: Type<any>, getter: (() => any), ...tags: any[]) {
+    this.registerByType(getter, type);
+    this.registerByTags(getter, tags);
   }
   
-  private registerByTags(instance: any, tags: any[]) {
+  private registerByTags(getter: (() => any), tags: any[]) {
     for (const tag of tags) {
-      let instances = this.instanceByTag.get(tag);
-      if (!instances) {
-        instances = [];
-        this.instanceByTag.set(tag, instances);
+      let getters = this.getterByTag.get(tag);
+      if (!getters) {
+        getters = [];
+        this.getterByTag.set(tag, getters);
       }
-      instances.push(instance);
+      getters.push(getter);
     }
   }
   
-  private registerByType(instance: any, type: Type<any>) {
-    let instances = this.instanceByType.get(type);
-    if (!instances) {
-      instances = [];
-      this.instanceByType.set(type, instances);
+  private registerByType(getter: (() => any), type: Type<any>) {
+    let getters = this.getterByType.get(type);
+    if (!getters) {
+      getters = [];
+      this.getterByType.set(type, getters);
     }
-    instances.push(instance);
+    getters.push(getter);
   }
 
-  get(diceQuery: DiceQuery): any {
+  get(diceQuery: DiceQuery): () => any {
     if (diceQuery.type) {
-      return this.getUnique(this.instanceByType.get(diceQuery.type), diceQuery.type);
+      return this.getUnique(this.getterByType.get(diceQuery.type), diceQuery.type);
     } else {
-      return this.getUnique(this.instanceByTag.get(diceQuery.tag), diceQuery.tag);
+      return this.getUnique(this.getterByTag.get(diceQuery.tag), diceQuery.tag);
     }
   }
 
-  getIfExists(diceQuery: DiceQuery): any | null {
+  getIfExists(diceQuery: DiceQuery): (() => any) | null {
     if (diceQuery.type) {
-      return this.getUniqueIfExists(this.instanceByType.get(diceQuery.type), diceQuery.type);
+      return this.getUniqueIfExists(this.getterByType.get(diceQuery.type), diceQuery.type);
     } else {
-      return this.getUniqueIfExists(this.instanceByTag.get(diceQuery.tag), diceQuery.tag);
+      return this.getUniqueIfExists(this.getterByTag.get(diceQuery.tag), diceQuery.tag);
     }
   }
 
-  private getUnique(instances: any[] | undefined, identifier: any): any {
-    if (!instances || instances.length === 0)
+  private getUnique(getters: (() => any)[] | undefined, identifier: any): any {
+    if (!getters || getters.length === 0)
       throw new Error(`No dice with identifier ${identifier} found.`);
-    else if (instances.length > 1)
-      throw new Error(`Multiple dices (${instances.length}) with identifier ${identifier} found.`)
+    else if (getters.length > 1)
+      throw new Error(`Multiple dices (${getters.length}) with identifier ${identifier} found.`)
     else
-      return instances[0];
+      return getters[0];
   }
 
-  private getUniqueIfExists(instances: any[] | undefined, identifier: any): any {
-    if (!instances || instances.length === 0)
+  private getUniqueIfExists(getters: (() => any)[] | undefined, identifier: any): any {
+    if (!getters || getters.length === 0)
       return null;
-    else if (instances.length > 1)
-      throw new Error(`Multiple dices (${instances.length}) with identifier ${identifier} found.`)
+    else if (getters.length > 1)
+      throw new Error(`Multiple dices (${getters.length}) with identifier ${identifier} found.`)
     else
-      return instances[0];
+      return getters[0];
   }
 }

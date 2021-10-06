@@ -14,7 +14,7 @@ export class Dice<T> {
     this.instance = new typeDesc.type();
     diceMap.set(this.instance, this);
     
-    this.provider.register(this.typeDesc.type, this.instance, this.typeDesc.tags);
+    this.provider.register(this.typeDesc.type, () => this.instance, this.typeDesc.tags);
 
     // preconstruct provided dices
     this.typeDesc.providesMap.forEach((providesData, propertyKey) => {
@@ -22,7 +22,7 @@ export class Dice<T> {
       let childDice = new Dice(this.container, this, providesTypeDesc);
       this.instance[propertyKey] = childDice.instance;
 
-      this.provider.register(providesTypeDesc.type, childDice.instance, ...new Set(providesTypeDesc.tags.concat(providesData.tags)));
+      this.provider.register(providesTypeDesc.type, () => childDice.instance, ...new Set(providesTypeDesc.tags.concat(providesData.tags)));
     });
 
     // preconstruct contained dices
@@ -51,14 +51,14 @@ export class Dice<T> {
     // resolve @requires field
     this.typeDesc.requiresMap.forEach((diceQuery, propertyKey) => {
       if (this.parent) {
-        this.instance[propertyKey] = this.parent.resolveQuery(diceQuery);
+        this.instance[propertyKey] = this.parent.resolveQuery(diceQuery)();
       } else {
-        this.instance[propertyKey] = this.container.resolveQuery(diceQuery);
+        this.instance[propertyKey] = this.container.resolveQuery(diceQuery)();
       }
     });
   }
 
-  resolveQuery(diceQuery: DiceQuery): any {
+  resolveQuery(diceQuery: DiceQuery): () => any {
     const selfProvided = this.provider.getIfExists(diceQuery);
     if (selfProvided)
       return selfProvided;

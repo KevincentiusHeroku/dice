@@ -36,10 +36,10 @@ describe(Dice.name, () => {
   it('should recursively autowire dices', () => {
     const container = createContainer();
 
-    const sing: DiceTestSingleton = container.resolve(DiceTestSingleton);
+    const sing: DiceTestSingleton = container.resolve(DiceTestSingleton)();
     expect(sing instanceof DiceTestSingleton).toBeTrue();
 
-    const parent: DiceTestParent = container.resolve(DiceTestParent);
+    const parent: DiceTestParent = container.resolve(DiceTestParent)();
     expect(parent instanceof DiceTestParent).toBeTrue();
     expect(parent.singleton).toBe(sing);
     expect(parent.providedByParent instanceof DiceTestProvidedByParent).toBeTrue();

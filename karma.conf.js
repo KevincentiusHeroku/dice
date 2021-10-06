@@ -4,7 +4,9 @@ module.exports = function (config) {
     frameworks: ["jasmine", "karma-typescript"],
 
     files: [
-      'src/**/*.ts'
+      'src/**/*.ts',
+      // 'src/**/!(*spec)*.ts',
+      // 'src/**/serializer.child.spec.ts',
     ],
 
     preprocessors: {
