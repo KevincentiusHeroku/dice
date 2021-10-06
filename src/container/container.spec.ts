@@ -39,25 +39,25 @@ class ContainerSpecDuplicateSingleton2 {}
 describe('Container', () => {
   it('should provide an autowired instance when queried for singleton by type', () => {
     const container = createContainer() as ContainerImpl;
-    const sing: ContainerSpecSingleton = container.resolveIdentifier(ContainerSpecSingleton)();
+    const sing: ContainerSpecSingleton = container.resolveIdentifier(ContainerSpecSingleton);
     expectAutowired(sing);
   });
 
   it('should provide the same instance everytime when queried for singleton by type', () => {
     const container = createContainer() as ContainerImpl;
 
-    let singleton1 = container.resolveIdentifier(ContainerSpecSingleton)();
+    let singleton1 = container.resolveIdentifier(ContainerSpecSingleton);
     expect(singleton1 instanceof ContainerSpecSingleton).toBeTrue();
-    expect(container.resolveIdentifier(ContainerSpecSingleton)()).toBe(singleton1);
-    expect(container.resolve(ContainerSpecSingleton)()).toBe(singleton1);
-    expect(container.resolveTag('container-spec-singleton')()).toBe(singleton1);
+    expect(container.resolveIdentifier(ContainerSpecSingleton)).toBe(singleton1);
+    expect(container.resolve(ContainerSpecSingleton)).toBe(singleton1);
+    expect(container.resolveTag('container-spec-singleton')).toBe(singleton1);
   });
 
   it('should provide the same instance everytime when queried for singleton by tag', () => {
     const container = createContainer() as ContainerImpl;
 
-    let singleton1 = container.resolveIdentifier('container-spec-tagged-service')();
-    let singleton2 = container.resolveIdentifier('container-spec-tagged-service')();
+    let singleton1 = container.resolveIdentifier('container-spec-tagged-service');
+    let singleton2 = container.resolveIdentifier('container-spec-tagged-service');
     expect(singleton1 === singleton2).toBeTrue();
     expect(singleton1 instanceof ContainerSpecTaggedSingleton).toBeTrue();
   });
@@ -65,29 +65,29 @@ describe('Container', () => {
   it('should provide the same instance everytime when queried for singleton by either type or tag', () => {
     const container = createContainer() as ContainerImpl;
 
-    let singleton1 = container.resolveIdentifier(ContainerSpecTaggedSingleton)();
-    let singleton2 = container.resolveIdentifier('container-spec-tagged-service')();
+    let singleton1 = container.resolveIdentifier(ContainerSpecTaggedSingleton);
+    let singleton2 = container.resolveIdentifier('container-spec-tagged-service');
     expect(singleton1 === singleton2).toBeTrue();
     expect(singleton1 instanceof ContainerSpecTaggedSingleton).toBeTrue();
   });
 
   it('should provide an autowired instance when queried for dice by type', () => {
     const container = createContainer() as ContainerImpl;
-    const dice1 = container.resolveIdentifier(ContainerSpecDice)();
+    const dice1 = container.resolveIdentifier(ContainerSpecDice);
     expectAutowired(dice1);
   });
 
   it('should provide an autowired instance when queried for dice by tag', () => {
     const container = createContainer() as ContainerImpl;
-    const dice1 = container.resolveIdentifier('container-spec-tagged-dice')();
+    const dice1 = container.resolveIdentifier('container-spec-tagged-dice');
     expectAutowired(dice1);
   });
 
   it('should provide a new instance everytime when queried for dice by type', () => {
     const container = createContainer() as ContainerImpl;
 
-    let dice1 = container.resolveIdentifier(ContainerSpecDice)();
-    let dice2 = container.resolveIdentifier(ContainerSpecDice)();
+    let dice1 = container.resolveIdentifier(ContainerSpecDice);
+    let dice2 = container.resolveIdentifier(ContainerSpecDice);
     expect(dice1 === dice2).toBeFalse();
     expect(dice1 instanceof ContainerSpecDice).toBeTrue();
   });
@@ -95,8 +95,8 @@ describe('Container', () => {
   it('should provide a new instance everytime when queried for dice by tag', () => {
     const container = createContainer() as ContainerImpl;
 
-    let dice1 = container.resolveIdentifier('container-spec-tagged-dice')();
-    let dice2 = container.resolveIdentifier('container-spec-tagged-dice')();
+    let dice1 = container.resolveIdentifier('container-spec-tagged-dice');
+    let dice2 = container.resolveIdentifier('container-spec-tagged-dice');
     expect(dice1 === dice2).toBeFalse();
     expect(dice1 instanceof ContainerSpecTaggedDice).toBeTrue();
   });

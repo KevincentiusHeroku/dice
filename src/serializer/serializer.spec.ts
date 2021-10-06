@@ -47,9 +47,9 @@ class TestSerializationParent {
 describe(Dice.name + ' (serialization)', () => {
   it('should serialize @persistent fields in a dice', () => {
     const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer)();
+    const serializer: Serializer = container.resolve(Serializer);
     
-    const before = container.resolve(TestSerializationSimple)();
+    const before = container.resolve(TestSerializationSimple);
     const memento = serializer.serialize(before);
 
     expect(expectSimpleMemento(memento)).toBeTrue();
@@ -57,9 +57,9 @@ describe(Dice.name + ' (serialization)', () => {
 
   it('should recursively serialize @contains and @provides fields in a dice, but not @requires fields', () => {
     const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer)();
+    const serializer: Serializer = container.resolve(Serializer);
 
-    const before = container.resolve(TestSerializationParent)();
+    const before = container.resolve(TestSerializationParent);
     const memento = serializer.serialize(before);
 
     expect(memento.val).toBe('bottle');
@@ -70,7 +70,7 @@ describe(Dice.name + ' (serialization)', () => {
   
   it('should restore the values of @persistent fields in a dice', () => {
     const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer)();
+    const serializer: Serializer = container.resolve(Serializer);
     
     const val = [5,7,9];
     const memento = {
@@ -82,7 +82,7 @@ describe(Dice.name + ' (serialization)', () => {
 
   it('should recursively restore @contains and @provides fields and autowire @requires fields', () => {
     const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer)();
+    const serializer: Serializer = container.resolve(Serializer);
     
     const testProvided = ['test4', 'test5', 'test6'];
     const memento = {
@@ -96,7 +96,7 @@ describe(Dice.name + ' (serialization)', () => {
     expect(after.simple.val).toBe('button');
     expect(after.simple.obj).toBe('testSimple');
     expect(after.provided.val).toBe(testProvided);
-    expect(after.required).toBe(container.resolve(TestSerializedRequired)());
+    expect(after.required).toBe(container.resolve(TestSerializedRequired));
   });
 
   function expectSimpleMemento(memento: any) {

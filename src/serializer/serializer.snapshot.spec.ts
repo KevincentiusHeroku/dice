@@ -34,8 +34,8 @@ class SnapshotTestParent {
 describe(Serializer + ' (snapshot/restore)', () => {
   it('should persist both @persistent fields and snapshot()', () => {
     const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer)();
-    const parent: SnapshotTestParent = container.resolve(SnapshotTestParent)!();
+    const serializer: Serializer = container.resolve(Serializer);
+    const parent: SnapshotTestParent = container.resolve(SnapshotTestParent);
     
     parent.val = 1;
     parent.pval = 2;

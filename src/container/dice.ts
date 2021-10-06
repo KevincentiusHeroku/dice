@@ -51,20 +51,20 @@ export class Dice<T> {
     // resolve @requires field
     this.typeDesc.requiresMap.forEach((diceQuery, propertyKey) => {
       if (this.parent) {
-        this.instance[propertyKey] = this.parent.resolveQuery(diceQuery)();
+        this.instance[propertyKey] = this.parent.resolveGetterQuery(diceQuery)();
       } else {
-        this.instance[propertyKey] = this.container.resolveQuery(diceQuery)();
+        this.instance[propertyKey] = this.container.resolveGetterQuery(diceQuery)();
       }
     });
   }
 
-  resolveQuery(diceQuery: DiceQuery): () => any {
+  resolveGetterQuery(diceQuery: DiceQuery): () => any {
     const selfProvided = this.provider.getIfExists(diceQuery);
     if (selfProvided)
       return selfProvided;
     else if (this.parent)
-      return this.parent.resolveQuery(diceQuery);
+      return this.parent.resolveGetterQuery(diceQuery);
     else
-      return this.container.resolveQuery(diceQuery);
+      return this.container.resolveGetterQuery(diceQuery);
   }
 }

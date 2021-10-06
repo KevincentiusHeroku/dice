@@ -3,8 +3,8 @@ import { Provider } from "./provider";
 import { createQuery, diceMap, DiceQuery, initializeTypeDescMap, Scope, Type, typeDescByTag, typeDescMap } from "../annotations/type-desc";
 
 export interface Container {
-  resolve<T>(type: Type<T>): () => T;
-  resolveTag(tag: any): () => any;
+  resolve<T>(type: Type<T>): T;
+  resolveTag(tag: any): any;
 }
 
 export class ContainerImpl {
@@ -30,19 +30,23 @@ export class ContainerImpl {
     });
   }
 
-  resolve<T>(type: Type<T>): () => T {
+  resolve<T>(type: Type<T>): T {
     return this.resolveIdentifier(type);
   }
 
-  resolveTag(tag: any): () => any {
+  resolveTag(tag: any): any {
     return this.resolveIdentifier(tag);
   }
 
-  resolveIdentifier(identifier: Type<any> | any): () => any {
-    return this.resolveQuery(createQuery(identifier));
+  resolveIdentifier(identifier: Type<any> | any): any {
+    return this.resolveGetter(identifier)();
   }
 
-  resolveDice(diceQuery: DiceQuery, parent?: any): () => any {
+  resolveGetter(identifier: Type<any> | any): () => any {
+    return this.resolveGetterQuery(createQuery(identifier));
+  }
+
+  resolveGetterDice(diceQuery: DiceQuery, parent?: any): () => any {
     if (diceQuery.type) {
       // get dice by type
       const dice = new Dice(this, parent, typeDescMap.get(diceQuery.type)!);
@@ -60,13 +64,13 @@ export class ContainerImpl {
     }
   }
 
-  resolveQuery(diceQuery: DiceQuery): () => any {
+  resolveGetterQuery(diceQuery: DiceQuery): () => any {
     const selfProvided = this.provider.getIfExists(diceQuery);
     if (selfProvided)
       // singleton
       return selfProvided;
     else
-      return this.resolveDice(diceQuery, null);
+      return this.resolveGetterDice(diceQuery, null);
   }
 }
 
