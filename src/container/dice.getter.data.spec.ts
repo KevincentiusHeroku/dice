@@ -1,8 +1,7 @@
 
-import { provides } from "..";
-import { dice, singleton } from "../annotations/scope-annotation";
-import { TestGetterTypes } from "./dice.getter.data.2.spec";
-import { TestGetterChild, TestGetterShouter } from "./dice.getter.spec";
+import { provides } from "../annotations/field-annotation";
+import { dice } from "../annotations/scope-annotation";
+import { TestGetterChild, TestGetterShouter, TestGetterTypes } from "./dice.getter.spec";
 
 @dice('test-getter-parent')
 export class TestGetterParent {

@@ -112,6 +112,7 @@ describe('Container', () => {
 
     expect(() => container.resolveIdentifier('container-spec-duplicate-singleton')).toThrow();
     expect(() => container.resolveIdentifier('container-spec-duplicate-dice')).toThrow();
+    expect(() => container.resolveGetterDice({tag: 'container-spec-duplicate-dice'})).toThrow();
   });
 });
 

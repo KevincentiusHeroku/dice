@@ -4,7 +4,7 @@ module.exports = function (config) {
     frameworks: ["jasmine", "karma-typescript"],
 
     files: [
-      'src/**/*.ts',
+      'src/**/!(index)*.ts',
       // 'src/**/!(*spec)*.ts',
       // 'src/**/dice.getter.data.2.spec.ts',
       // 'src/**/dice.getter.data.spec.ts',

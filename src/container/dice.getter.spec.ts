@@ -1,8 +1,11 @@
 import { dice } from "../annotations/scope-annotation";
 import { contains, requires } from "../annotations/field-annotation";
 import { createContainer } from "../container/container";
-import { TestGetterTypes } from "./dice.getter.data.2.spec";
 import { TestGetterParent } from "./dice.getter.data.spec";
+
+export enum TestGetterTypes {
+  SHOUTER
+}
 
 export interface TestGetterShouter { shout(): string; }
 
