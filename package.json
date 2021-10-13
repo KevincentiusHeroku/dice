@@ -1,27 +1,24 @@
 {
   "name": "vkg-dice",
-  "version": "0.0.13",
-  "types": "dist/index.d.ts",
+  "version": "0.0.19",
+  "types": "lib/index.d.ts",
+  "main": "lib/index.js",
+  "files": [
+    "lib/**/*"
+  ],
   "scripts": {
-    "test": "karma start",
-    "build": "tsc -d --declarationDir dist --declarationMap --emitDeclarationOnly"
+    "test": "ts-node node_modules/jasmine/bin/jasmine",
+    "coverage": "nyc --reporter=html npm run test & start ./coverage/index.html",
+    "build": "tsc"
   },
   "private": false,
   "references": [],
   "devDependencies": {
-    "@types/jasmine": "^3.8.1",
+    "@types/jasmine": "^3.9.1",
     "jasmine": "^3.8.0",
-    "jasmine-ts": "^0.4.0",
-    "jasmine-core": "^3.8.0",
-    "karma-chrome-launcher": "^3.1.0",
-    "karma-coverage": "^2.0.3",
-    "karma-jasmine": "^4.0.1",
-    "karma-jasmine-html-reporter": "^1.7.0",
-    "karma-typescript": "^5.5.1",
-    "spec": "^1.0.1",
+    "nyc": "^15.1.0",
     "ts-node": "^10.0.0",
-    "tsc": "^2.0.3",
-    "typescript": "^4.3.5"
+    "typescript": "^4.4.4"
   },
   "dependencies": {
   }
