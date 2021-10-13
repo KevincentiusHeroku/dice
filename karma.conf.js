@@ -6,7 +6,9 @@ module.exports = function (config) {
     files: [
       'src/**/*.ts',
       // 'src/**/!(*spec)*.ts',
-      // 'src/**/serializer.child.spec.ts',
+      // 'src/**/dice.getter.data.2.spec.ts',
+      // 'src/**/dice.getter.data.spec.ts',
+      // 'src/**/dice.getter.spec.ts',
     ],
 
     preprocessors: {

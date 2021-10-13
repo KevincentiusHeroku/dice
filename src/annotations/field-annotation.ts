@@ -8,7 +8,7 @@ export const typeToRequiresGetterMap = new Map<Type<any>, Map<string, DiceQuery>
 export const typeToPersistentMap = new Map<Type<any>, Map<string, void>>();
 
 export interface ProvidesData<T> {
-  type: Type<T>;
+  type?: Type<T>;
   tags: any[];
 }
 
@@ -16,13 +16,14 @@ export function contains<T>(containsType: Type<T>) {
   return fieldAnnotation(typeToContainsMap, containsType);
 }
 
-export function provides<T>(providesType: Type<T>, ...tags: any) {
+export function provides<T>(providesType?: Type<T>, ...tags: any) {
   return fieldAnnotation(typeToProvidesMap, {type: providesType, tags});
 }
 
 export function requires<T>(identifier: Type<T> | any) {
   return function(target: Object, propertyKey: string) {
     const typeToFieldMap = /^(is|get)[A-Z].*$/.test(propertyKey) ? typeToRequiresGetterMap : typeToRequiresMap;
+    console.log(identifier, '-->', JSON.stringify(createQuery));
     registerFieldAnnotation(target, typeToFieldMap, propertyKey, createQuery(identifier));
   }
 }
@@ -38,6 +39,7 @@ function fieldAnnotation<T>(typeToFieldMap: Map<Type<any>, Map<string, T>>, valu
 }
 
 function registerFieldAnnotation<T>(target: Object, typeToFieldMap: Map<Type<any>, Map<string, T>>, propertyKey: string, value: T) {
+  console.log('register', propertyKey, JSON.stringify(value));
   let type = target.constructor as Type<T>;
 
   let fieldMap = typeToFieldMap.get(type);

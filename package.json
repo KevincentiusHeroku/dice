@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "@types/seedrandom": "^3.0.1",
-    "deep-copy-ts": "^0.5.0",
     "jasmine-ts": "^0.4.0"
   }
 }

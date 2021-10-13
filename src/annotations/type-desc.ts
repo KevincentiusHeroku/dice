@@ -29,6 +29,9 @@ export interface TypeDesc<T> {
 }
 
 export function createQuery<T>(identifier: Type<T> | any): DiceQuery {
+  if (identifier===undefined) {
+    throw new Error('undefined identifier');
+  }
   return {
     type: typeof identifier === 'function' ? identifier : undefined,
     tag: typeof identifier === 'function' ? undefined : identifier,
@@ -47,6 +50,7 @@ export function initializeTypeDescMap() {
 
       // put entries of typeToRequiresMap into typeDescMap
       typeDesc.requiresMap = typeToRequiresMap.get(type) ?? new Map();
+      console.log('req', JSON.stringify(typeToRequiresMap.get(type)), typeDesc.type.name);
 
       // put entries of typeToRequiresGetterMap into typeDescMap
       typeDesc.requiresGetterMap = typeToRequiresGetterMap.get(type) ?? new Map();

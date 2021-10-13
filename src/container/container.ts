@@ -55,12 +55,12 @@ export class ContainerImpl {
     } else {
       // get dice by tag
       const candidates = typeDescByTag.get(diceQuery.tag)!;
-      if (candidates.length === 1) {
+      if (candidates && candidates.length === 1) {
         const dice = new Dice(this, parent, candidates[0]);
         dice.autowire();
         return () => dice.getInstance();
       } else
-        throw new Error(`Cannot resolve dice because ${candidates.length} dices were found for tag ${diceQuery.tag}`);
+        throw new Error(`Cannot resolve dice because ${candidates ? candidates.length : 0} dices were found for tag ${diceQuery.tag}`);
     }
   }
 

@@ -4,8 +4,10 @@ export class Provider {
   getterByType = new Map<Type<any>, (() => any)[]>();
   getterByTag = new Map<any, (() => any)[]>();
 
-  register(type: Type<any>, getter: (() => any), ...tags: any[]) {
-    this.registerByType(getter, type);
+  register(type: Type<any> | undefined, getter: (() => any), ...tags: any[]) {
+    if (type) {
+      this.registerByType(getter, type);
+    }
     this.registerByTags(getter, tags);
   }
   
