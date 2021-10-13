@@ -1,6 +1,6 @@
 import { contains, provides, requires } from "../annotations/field-annotation";
 import { dice, singleton } from "../annotations/scope-annotation";
-import { ContainerImpl, createContainer } from "./container";
+import { createContainer } from "./container";
 import { Dice } from "./dice";
 import { DiceTestParent } from "./dice.data.spec";
 

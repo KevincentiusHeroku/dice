@@ -1,4 +1,4 @@
-import { ProvidesData, typeToContainsMap, typeToPersistentMap, typeToProvidesMap, typeToRequiresMap } from "../annotations/field-annotation";
+import { ProvidesData, typeToContainsMap, typeToPersistentMap, typeToProvidesMap, typeToRequiresGetterMap, typeToRequiresMap } from "../annotations/field-annotation";
 import { Dice } from "../container/dice";
 
 // global variables from decorators:
@@ -24,10 +24,14 @@ export interface TypeDesc<T> {
   containsMap: Map<string, Type<any>>;
   providesMap: Map<string, ProvidesData<any>>;
   requiresMap: Map<string, DiceQuery>;
+  requiresGetterMap: Map<string, DiceQuery>;
   persistentFields: Set<string>;
 }
 
 export function createQuery<T>(identifier: Type<T> | any): DiceQuery {
+  if (identifier===undefined) {
+    throw new Error('undefined identifier');
+  }
   return {
     type: typeof identifier === 'function' ? identifier : undefined,
     tag: typeof identifier === 'function' ? undefined : identifier,
@@ -46,6 +50,9 @@ export function initializeTypeDescMap() {
 
       // put entries of typeToRequiresMap into typeDescMap
       typeDesc.requiresMap = typeToRequiresMap.get(type) ?? new Map();
+
+      // put entries of typeToRequiresGetterMap into typeDescMap
+      typeDesc.requiresGetterMap = typeToRequiresGetterMap.get(type) ?? new Map();
 
       // put entries of typeToPersistentMap into typeDescMap
       typeDesc.persistentFields = new Set<string>(typeToPersistentMap.get(type)?.keys());

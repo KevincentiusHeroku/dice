@@ -30,11 +30,17 @@ class ContainerSpecTaggedDice {
   @contains(ContainerSpecContainedDice) public containedDice!: ContainerSpecContainedDice;
 }
 
-@dice('container-spec-duplicate-singleton')
+@singleton('container-spec-duplicate-singleton')
 class ContainerSpecDuplicateSingleton1 {}
 
-@dice('container-spec-duplicate-singleton')
+@singleton('container-spec-duplicate-singleton')
 class ContainerSpecDuplicateSingleton2 {}
+
+@singleton('container-spec-duplicate-dice')
+class ContainerSpecDuplicateDice1 {}
+
+@singleton('container-spec-duplicate-dice')
+class ContainerSpecDuplicateDice2 {}
 
 describe('Container', () => {
   it('should provide an autowired instance when queried for singleton by type', () => {
@@ -105,7 +111,9 @@ describe('Container', () => {
     const container = createContainer() as ContainerImpl;
 
     expect(() => container.resolveIdentifier('container-spec-duplicate-singleton')).toThrow();
-  })
+    expect(() => container.resolveIdentifier('container-spec-duplicate-dice')).toThrow();
+    expect(() => container.resolveGetterDice({tag: 'container-spec-duplicate-dice'})).toThrow();
+  });
 });
 
 function expectAutowired(sing: ContainerSpecSingleton) {

@@ -14,15 +14,20 @@ export class Dice<T> {
     this.instance = new typeDesc.type();
     diceMap.set(this.instance, this);
     
-    this.provider.register(this.typeDesc.type, this.instance, this.typeDesc.tags);
+    this.provider.register(this.typeDesc.type, () => this.instance, ...this.typeDesc.tags);
 
     // preconstruct provided dices
     this.typeDesc.providesMap.forEach((providesData, propertyKey) => {
-      const providesTypeDesc = typeDescMap.get(providesData.type)!;
-      let childDice = new Dice(this.container, this, providesTypeDesc);
-      this.instance[propertyKey] = childDice.instance;
+      let providesTags = providesData.tags;
+      if (providesData.type) {
+        const providesTypeDesc = typeDescMap.get(providesData.type)!;
+        providesTags = Array.from(new Set(providesTags.concat(providesTypeDesc.tags)));
+        
+        let childDice = new Dice(this.container, this, providesTypeDesc);
+        this.instance[propertyKey] = childDice.instance;
+      }
 
-      this.provider.register(providesTypeDesc.type, childDice.instance, ...new Set(providesTypeDesc.tags.concat(providesData.tags)));
+      this.provider.register(providesData.type, () => this.instance[propertyKey], ...providesTags);
     });
 
     // preconstruct contained dices
@@ -45,26 +50,37 @@ export class Dice<T> {
 
     // recursive autowiring of @provides fields
     this.typeDesc.providesMap.forEach((providesData, propertyKey) => {
-      diceMap.get(this.instance[propertyKey])!.autowire();
-    });
-
-    // resolve @requires field
-    this.typeDesc.requiresMap.forEach((diceQuery, propertyKey) => {
-      if (this.parent) {
-        this.instance[propertyKey] = this.parent.resolveQuery(diceQuery);
-      } else {
-        this.instance[propertyKey] = this.container.resolveQuery(diceQuery);
+      if (providesData.type) {
+        diceMap.get(this.instance[propertyKey])!.autowire();
       }
     });
+
+    // resolve @requires fields
+    this.typeDesc.requiresMap.forEach((diceQuery, propertyKey) => {
+      this.instance[propertyKey] = this.resolveGetterInParent(diceQuery)();
+    });
+
+    // resolve @requires getter fields
+    this.typeDesc.requiresGetterMap.forEach((diceQuery, propertyKey) => {
+      this.instance[propertyKey] = this.resolveGetterInParent(diceQuery);
+    })
   }
 
-  resolveQuery(diceQuery: DiceQuery): any {
+  private resolveGetterInParent(diceQuery: DiceQuery): () => any {
+    if (this.parent) {
+      return this.parent.resolveGetterQuery(diceQuery);
+    } else {
+      return this.container.resolveGetterQuery(diceQuery);
+    }
+  }
+
+  resolveGetterQuery(diceQuery: DiceQuery): () => any {
     const selfProvided = this.provider.getIfExists(diceQuery);
     if (selfProvided)
       return selfProvided;
     else if (this.parent)
-      return this.parent.resolveQuery(diceQuery);
+      return this.parent.resolveGetterQuery(diceQuery);
     else
-      return this.container.resolveQuery(diceQuery);
+      return this.container.resolveGetterQuery(diceQuery);
   }
 }

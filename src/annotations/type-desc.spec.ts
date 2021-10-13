@@ -1,6 +1,6 @@
 import { contains, persistent, provides, requires } from "./field-annotation";
 import { dice, singleton } from "./scope-annotation";
-import { initializeTypeDescMap, typeDescMap } from "./type-desc";
+import { createQuery, initializeTypeDescMap, typeDescMap } from "./type-desc";
 
 @dice('tag-grandchild')
 class TestDiceGrandchild {}
@@ -11,7 +11,9 @@ class TestDiceChild {
 }
 
 @dice('tag-contained')
-class TestDiceContained {}
+class TestDiceContained {
+  @requires(TestDiceChild) getChild!: () => TestDiceChild;
+}
 
 @dice()
 class TestDiceEmpty {}
@@ -42,5 +44,11 @@ describe('Dice annotation', () => {
 
     expect(typeDescMap.get(TestDiceEmpty)?.providesMap).toBeTruthy();
     expect(typeDescMap.get(TestDiceEmpty)?.requiresMap).toBeTruthy();
+
+    expect(typeDescMap.get(TestDiceContained)?.requiresGetterMap.get('getChild')?.type).toBe(TestDiceChild);
+  });
+
+  it('should throw an error if the diceQuery is undefined', () => {
+    expect(() => createQuery(undefined)).toThrow();
   });
 });

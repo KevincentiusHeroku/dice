@@ -1,6 +1,6 @@
 import { provides, requires } from "../annotations/field-annotation";
 import { dice, singleton } from "../annotations/scope-annotation";
-import { ContainerImpl, createContainer } from "./container";
+import { createContainer } from "./container";
 import { Dice } from "./dice";
 
 interface TestNamedProvided {
@@ -46,5 +46,10 @@ describe(Dice.name + ' (named)', () => {
     expect(calc3.provided1).toBe(calc1.provided1);
     expect(calc3.provided2).toBe(calc2.provided2);
     expect(calc3.provided3 instanceof TestNamedProvided3).toBeTrue();
+  });
+
+  it('should throw error if an unknown tag is required', () => {
+    const container = createContainer();
+    expect(() => container.resolveTag('test-named-unknown-tag')).toThrow();
   });
 });
