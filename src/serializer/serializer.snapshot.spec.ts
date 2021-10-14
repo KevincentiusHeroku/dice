@@ -60,5 +60,7 @@ describe(Serializer + ' (snapshot/restore)', () => {
     expect(restored.child2.val).toBe(5);
     expect(restored.child2.pval).toBe(6);
     expect(restored.child2.child1).toBe(restored.child1);
+
+    console.log(JSON.stringify(memento));
   });
 });
