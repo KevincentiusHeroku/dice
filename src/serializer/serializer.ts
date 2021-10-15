@@ -24,7 +24,18 @@ export class Serializer {
     }
 
     if (this.hasSnapshot(instance)) {
-      memento.snapshot = instance.snapshot();
+      const snapshot = instance.snapshot();
+      if (typeof snapshot === 'object') {
+        for (const key in snapshot) {
+          if (memento[key] != undefined) {
+            throw new Error(`Property ${key} in snapshot conflicts with a persistent field!`);
+          } else {
+            memento[key] = snapshot[key];
+          }
+        }
+      } else {
+        memento.snapshot = snapshot;
+      }
     }
 
     return memento;
@@ -59,8 +70,14 @@ export class Serializer {
     // restore current instance
     this.restorePersistentFields(instance, memento);
 
-    if (memento.snapshot) {
-      instance.restore(memento.snapshot);
+    if (this.hasSnapshot(instance)) {
+      if (memento.snapshot) {
+        // tODO: only allow object for snapshot
+        instance.restore(memento.snapshot);
+      } else {
+        // TODO: remove persistent fields from memento
+        instance.restore(memento);
+      }
     }
   }
 

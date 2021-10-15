@@ -31,6 +31,21 @@ class SnapshotTestParent {
   restore(val: number) { this.val = val / 10; }
 }
 
+@dice()
+class SnapshotTestConflict {
+  @persistent() public pval = 'foo';
+  snapshot() { return { pval: 'bar' }}
+  restore(memento: any) {}
+}
+
+@dice()
+class SnapshotTestObject {
+  @persistent() public pval = 'foo';
+  public oval = 'bar';
+  snapshot() { return { oval: this.oval }; }
+  restore(memento: any) { this.oval = memento.oval; }
+}
+
 describe(Serializer + ' (snapshot/restore)', () => {
   it('should persist both @persistent fields and snapshot()', () => {
     const container = createContainer();
@@ -60,7 +75,27 @@ describe(Serializer + ' (snapshot/restore)', () => {
     expect(restored.child2.val).toBe(5);
     expect(restored.child2.pval).toBe(6);
     expect(restored.child2.child1).toBe(restored.child1);
+  });
 
-    console.log(JSON.stringify(memento));
+  it('should throw an error if the snapshot object conflicts with existing persistent fields', () => {
+    const container = createContainer();
+    const serializer: Serializer = container.resolve(Serializer);
+    const dice: SnapshotTestConflict = container.resolve(SnapshotTestConflict);
+
+    expect(() => serializer.serialize(dice)).toThrow();
+  });
+
+  it('should serialize snapshot object', () => {
+    const container = createContainer();
+    const serializer: Serializer = container.resolve(Serializer);
+    const originalObject: SnapshotTestObject = container.resolve(SnapshotTestObject);
+    originalObject.oval = 'man';
+
+    const memento = serializer.serialize(originalObject);
+    expect(memento).toEqual({pval: 'foo', oval: 'man'});
+
+    const deserializedObject = serializer.restore(SnapshotTestObject, memento);
+    expect(deserializedObject.pval).toBe('foo');
+    expect(deserializedObject.oval).toBe('man');
   });
 });
