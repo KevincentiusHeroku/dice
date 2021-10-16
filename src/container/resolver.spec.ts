@@ -15,12 +15,13 @@ class ResolverTestProvided {}
 @dice()
 class ResolverTestParent {
   @contains(ResolverTestChild) child!: ResolverTestChild;
-  @provides(ResolverTestProvided) prov!: ResolverTestProvided;
+@provides(ResolverTestProvided) prov!: ResolverTestProvided;
 }
 
 describe('Resolver', () => {
+  const container = createContainer();
+
   it('should resolve dices from the instance\'s scope', () => {
-    const container = createContainer();
     const parent = container.resolve(ResolverTestParent);
     const childResolver = getResolver(parent.child);
     const singleton = container.resolve(ResolverTestSingleton);

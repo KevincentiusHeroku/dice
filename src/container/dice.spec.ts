@@ -33,9 +33,9 @@ import { DiceTestParent } from "./dice.data.spec";
 }
 
 describe(Dice.name, () => {
+  const container = createContainer();
+  
   it('should recursively autowire dices', () => {
-    const container = createContainer();
-
     const sing: DiceTestSingleton = container.resolve(DiceTestSingleton);
     expect(sing instanceof DiceTestSingleton).toBeTrue();
 

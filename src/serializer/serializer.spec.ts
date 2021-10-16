@@ -45,10 +45,10 @@ class TestSerializationParent {
 }
 
 describe(Dice.name + ' (serialization)', () => {
+  const container = createContainer();
+  const serializer: Serializer = container.resolve(Serializer);
+  
   it('should serialize @persistent fields in a dice', () => {
-    const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer);
-    
     const before = container.resolve(TestSerializationSimple);
     const memento = serializer.serialize(before);
 
@@ -56,9 +56,6 @@ describe(Dice.name + ' (serialization)', () => {
   });
 
   it('should recursively serialize @contains and @provides fields in a dice, but not @requires fields', () => {
-    const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer);
-
     const before = container.resolve(TestSerializationParent);
     const memento = serializer.serialize(before);
 
@@ -69,9 +66,6 @@ describe(Dice.name + ' (serialization)', () => {
   });
   
   it('should restore the values of @persistent fields in a dice', () => {
-    const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer);
-    
     const val = [5,7,9];
     const memento = {
       obj: val
@@ -81,9 +75,6 @@ describe(Dice.name + ' (serialization)', () => {
   });
 
   it('should recursively restore @contains and @provides fields and autowire @requires fields', () => {
-    const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer);
-    
     const testProvided = ['test4', 'test5', 'test6'];
     const memento = {
       simple: { obj: 'testSimple', val: 'button' },

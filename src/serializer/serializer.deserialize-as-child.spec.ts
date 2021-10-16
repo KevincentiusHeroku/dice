@@ -25,9 +25,10 @@ interface Shouter { shout(): string; }
 }
 
 describe(Serializer.name + ' (child)', () => {
+  const container = createContainer();
+  const serializer: Serializer = container.resolve(Serializer);
+
   it('should ', () => {
-    const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer);
     const parent1 = container.resolve(SerializerChildTestParent1);
     const parent2 = container.resolve(SerializerChildTestParent2);
     const memento = {};

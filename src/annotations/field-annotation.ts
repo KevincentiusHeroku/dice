@@ -1,4 +1,4 @@
-import { Type, createQuery, DiceQuery } from "../annotations/type-desc";
+import { Type, createQuery, DiceQuery, markTypeDescMapDirty } from "../annotations/type-desc";
 
 // global variables from decorators:
 export const typeToContainsMap = new Map<Type<any>, Map<string, Type<any>>>();
@@ -47,4 +47,6 @@ function registerFieldAnnotation<T>(target: Object, typeToFieldMap: Map<Type<any
   }
 
   fieldMap.set(propertyKey, value);
+
+  markTypeDescMapDirty();
 }

@@ -61,3 +61,7 @@ export function initializeTypeDescMap() {
   }
   return typeDescMap;
 }
+
+export function markTypeDescMapDirty() {
+  typeDescMapInitialized = false;
+}

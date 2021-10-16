@@ -1,4 +1,4 @@
-import { Scope, Type, TypeDesc, typeDescByTag, typeDescMap } from "./type-desc";
+import { markTypeDescMapDirty, Scope, Type, TypeDesc, typeDescByTag, typeDescMap } from "./type-desc";
 
 export function dice<T>(...tags: any[]) {
   return scopeAnnotation<T>(Scope.DICE, tags);
@@ -36,5 +36,7 @@ export function scopeAnnotation<T>(scope: Scope, tags: any[]) {
     } else {
       throw new Error('The type ' + type.name + ' is being registered multiple times in the current container!');
     }
+    
+    markTypeDescMapDirty();
   }
 }

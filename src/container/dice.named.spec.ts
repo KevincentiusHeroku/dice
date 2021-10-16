@@ -29,8 +29,9 @@ interface TestNamedProvided {
 }
 
 describe(Dice.name + ' (named)', () => {
+  const container = createContainer();
+
   it('should recursively autowire named dices', () => {
-    const container = createContainer();
     const calc1: TestNamedCalc1 = container.resolveTag("test-named-calc-1");
 
     expect(calc1 instanceof TestNamedCalc1).toBeTrue();
@@ -49,7 +50,6 @@ describe(Dice.name + ' (named)', () => {
   });
 
   it('should throw error if an unknown tag is required', () => {
-    const container = createContainer();
     expect(() => container.resolveTag('test-named-unknown-tag')).toThrow();
   });
 });

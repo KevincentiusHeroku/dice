@@ -47,9 +47,10 @@ class SnapshotTestObject {
 }
 
 describe(Serializer + ' (snapshot/restore)', () => {
+  const container = createContainer();
+  const serializer: Serializer = container.resolve(Serializer);
+
   it('should persist both @persistent fields and snapshot()', () => {
-    const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer);
     const parent: SnapshotTestParent = container.resolve(SnapshotTestParent);
     
     parent.val = 1;
@@ -78,16 +79,12 @@ describe(Serializer + ' (snapshot/restore)', () => {
   });
 
   it('should throw an error if the snapshot object conflicts with existing persistent fields', () => {
-    const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer);
     const dice: SnapshotTestConflict = container.resolve(SnapshotTestConflict);
 
     expect(() => serializer.serialize(dice)).toThrow();
   });
 
   it('should serialize snapshot object', () => {
-    const container = createContainer();
-    const serializer: Serializer = container.resolve(Serializer);
     const originalObject: SnapshotTestObject = container.resolve(SnapshotTestObject);
     originalObject.oval = 'man';
 

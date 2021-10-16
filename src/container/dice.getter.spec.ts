@@ -30,9 +30,10 @@ export interface TestGetterShouter { shout(): string; }
 }
 
 describe('Dice (getter)', () => {
+  const container = createContainer();
+
   it('should provide via getter so that when the instance is swapped by the parent, the child gets the new instance.', () => {
     // setup
-    const container = createContainer();
     const parent = container.resolve(TestGetterParent);
     parent.shouter = container.resolve(TestGetterOriginal);
     
@@ -47,7 +48,6 @@ describe('Dice (getter)', () => {
   
   it('should be able to inject parent directly to child by tag', () => {
     // setup
-    const container = createContainer();
     const parent = container.resolve(TestGetterParent);
 
     // test injecting parent into child

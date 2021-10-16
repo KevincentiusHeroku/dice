@@ -7,8 +7,9 @@
     "lib/**/*"
   ],
   "scripts": {
-    "test": "ts-node node_modules/jasmine/bin/jasmine",
-    "coverage": "nyc --reporter=html npm run test & start ./coverage/index.html",
+    "test": "npx jasmine-ts",
+    "watch": "nodemon --ext ts --exec \"npx jasmine-ts \\\"src/**/*.spec.ts\\\"\"",
+    "coverage": "nyc --reporter=html npx jasmine-ts & start ./coverage/index.html",
     "build": "tsc"
   },
   "private": false,
@@ -16,11 +17,16 @@
   "devDependencies": {
     "@types/jasmine": "^3.9.1",
     "jasmine": "^3.8.0",
+    "jasmine-ts": "^0.4.0",
+    "nodemon": "^2.0.13",
     "nyc": "^15.1.0",
     "ts-node": "^10.0.0",
     "typescript": "^4.4.4"
   },
-  "dependencies": {
-  },
-  "nyc": { "exclude": [ "**/*.spec.ts", "src/index.ts" ] }
+  "nyc": {
+    "exclude": [
+      "**/*.spec.ts",
+      "src/index.ts"
+    ]
+  }
 }
