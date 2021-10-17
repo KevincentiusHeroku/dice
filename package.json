@@ -1,6 +1,6 @@
 {
   "name": "vkg-dice",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "types": "lib/index.d.ts",
   "main": "lib/index.js",
   "files": [
@@ -16,7 +16,6 @@
   "references": [],
   "devDependencies": {
     "@types/jasmine": "^3.9.1",
-    "jasmine": "^3.8.0",
     "jasmine-ts": "^0.4.0",
     "nodemon": "^2.0.13",
     "nyc": "^15.1.0",
