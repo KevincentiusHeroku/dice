@@ -9,7 +9,7 @@
   "scripts": {
     "test": "npx jasmine-ts",
     "watch": "nodemon --ext ts --exec \"npx jasmine-ts \\\"src/**/*.spec.ts\\\"\"",
-    "coverage": "nyc --reporter=html npx jasmine-ts & start ./coverage/index.html",
+    "coverage": "nyc --reporter=lcov --reporter=html npx jasmine-ts & start ./coverage/index.html",
     "build": "tsc"
   },
   "private": false,

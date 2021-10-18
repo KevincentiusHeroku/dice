@@ -7,10 +7,10 @@ export interface Container {
   resolveTag(tag: any): any;
 }
 
-export class ContainerImpl {
+export class ContainerImpl implements Container {
   private provider: Provider = new Provider();
 
-  constructor() {
+  constructor(private replacementMap?: Map<any, any>) {
     initializeTypeDescMap();
 
     // construct singletons
@@ -31,21 +31,18 @@ export class ContainerImpl {
   }
 
   resolve<T>(type: Type<T>): T {
-    return this.resolveIdentifier(type);
+    return this.resolveGetter(type)();
   }
 
   resolveTag(tag: any): any {
-    return this.resolveIdentifier(tag);
-  }
-
-  resolveIdentifier(identifier: Type<any> | any): any {
-    return this.resolveGetter(identifier)();
+    return this.resolveGetter(tag)();
   }
 
   resolveGetter(identifier: Type<any> | any): () => any {
     return this.resolveGetterQuery(createQuery(identifier));
   }
 
+  /** This method only resolves dices. For singletons or replacements, resolveGetterQuery should be used. */
   resolveGetterDice(diceQuery: DiceQuery, parent?: any): () => any {
     if (diceQuery.type) {
       // get dice by type
@@ -59,21 +56,38 @@ export class ContainerImpl {
         const dice = new Dice(this, parent, candidates[0]);
         dice.autowire();
         return () => dice.getInstance();
-      } else
+      } else {
         throw new Error(`Cannot resolve dice because ${candidates ? candidates.length : 0} dices were found for tag ${diceQuery.tag}`);
+      }
     }
   }
 
   resolveGetterQuery(diceQuery: DiceQuery): () => any {
+    // replacement (mocks)
+    const replacement = this.getReplacement(diceQuery);
+    if (replacement) {
+      return replacement;
+    }
+
+    // singleton
     const selfProvided = this.provider.getIfExists(diceQuery);
-    if (selfProvided)
-      // singleton
+    if (selfProvided) {
       return selfProvided;
-    else
-      return this.resolveGetterDice(diceQuery, null);
+    }
+    
+    // dice
+    return this.resolveGetterDice(diceQuery, null);
+  }
+
+  getReplacement(diceQuery: DiceQuery): (() => any) | null {
+    if (this.replacementMap) {
+      return this.replacementMap.get(diceQuery.tag ?? diceQuery.type);
+    } else {
+      return null;
+    }
   }
 }
 
-export function createContainer(): Container {
-  return new ContainerImpl();
+export function createContainer(replacementMap?: Map<any, any>): Container {
+  return new ContainerImpl(replacementMap);
 }

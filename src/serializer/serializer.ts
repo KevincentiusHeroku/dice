@@ -72,7 +72,6 @@ export class Serializer {
 
     if (this.hasSnapshot(instance)) {
       if (memento.snapshot) {
-        // tODO: only allow object for snapshot
         instance.restore(memento.snapshot);
       } else {
         // TODO: remove persistent fields from memento

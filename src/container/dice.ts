@@ -1,41 +1,55 @@
 import { ContainerImpl } from "./container";
 import { Provider } from "./provider";
-import { diceMap, DiceQuery, TypeDesc, typeDescMap } from "../annotations/type-desc";
+import { createQuery, diceMap, DiceQuery, Type, TypeDesc, typeDescMap } from "../annotations/type-desc";
 
 export class Dice<T> {
   private instance: any;
   private provider: Provider = new Provider();
+  private isMock = false;
   
   constructor(
     private container: ContainerImpl,
     private parent: Dice<any> | null,
-    private typeDesc: TypeDesc<T>
+    private typeDesc: TypeDesc<T>,
+    private replacement?: (() => any) | null
   ) {
-    this.instance = new typeDesc.type();
-    diceMap.set(this.instance, this);
-    
-    this.provider.register(this.typeDesc.type, () => this.instance, ...this.typeDesc.tags);
+    if (this.replacement) {
+      this.instance = this.replacement();
+      this.isMock = true;
+      diceMap.set(this.instance, this);
+    } else {
+      this.instance = new typeDesc.type();
+      diceMap.set(this.instance, this);
+      
+      this.provider.register(this.typeDesc.type, () => this.instance, ...this.typeDesc.tags);
 
-    // preconstruct provided dices
-    this.typeDesc.providesMap.forEach((providesData, propertyKey) => {
-      let providesTags = providesData.tags;
-      if (providesData.type) {
-        const providesTypeDesc = typeDescMap.get(providesData.type)!;
-        providesTags = Array.from(new Set(providesTags.concat(providesTypeDesc.tags)));
-        
-        let childDice = new Dice(this.container, this, providesTypeDesc);
-        this.instance[propertyKey] = childDice.instance;
-      }
+      // preconstruct provided dices
+      this.typeDesc.providesMap.forEach((providesData, propertyKey) => {
+        let providesTags = providesData.tags;
+        if (providesData.type) {
+          const providesTypeDesc = this.createChildDice(providesData.type, propertyKey);
+          
+          providesTags = Array.from(new Set(providesTags.concat(providesTypeDesc.tags)));
+        }
 
-      this.provider.register(providesData.type, () => this.instance[propertyKey], ...providesTags);
-    });
+        this.provider.register(providesData.type, () => this.instance[propertyKey], ...providesTags);
+      });
 
-    // preconstruct contained dices
-    this.typeDesc.containsMap.forEach((containsType, propertyKey) => {
-      const containsTypeDesc = typeDescMap.get(containsType)!;
-      let childDice = new Dice(this.container, this, containsTypeDesc);
-      this.instance[propertyKey] = childDice.instance;
-    });
+      // preconstruct contained dices
+      this.typeDesc.containsMap.forEach((containsType, propertyKey) => {
+        this.createChildDice(containsType, propertyKey);
+      });
+    }
+  }
+
+  private createChildDice(type: Type<any>, propertyKey: string) {
+    const typeDesc = typeDescMap.get(type)!;
+    const replacement = this.container.getReplacement(createQuery(type));
+
+    const childDice = new Dice(this.container, this, typeDesc, replacement);
+
+    this.instance[propertyKey] = childDice.instance;
+    return typeDesc;
   }
 
   getContainer() { return this.container; }
@@ -43,6 +57,10 @@ export class Dice<T> {
   getInstance() { return this.instance; }
   
   autowire() {
+    if (this.isMock) {
+      return;
+    }
+
     // recursive autowiring of @contains fields
     this.typeDesc.containsMap.forEach((containsType, propertyKey) => {
       diceMap.get(this.instance[propertyKey])!.autowire();
@@ -75,10 +93,20 @@ export class Dice<T> {
   }
 
   resolveGetterQuery(diceQuery: DiceQuery): () => any {
+    // replacements (mocks)
+    const replacement = this.container.getReplacement(diceQuery);
+    if (replacement) {
+      return replacement;
+    }
+
+    // self provided
     const selfProvided = this.provider.getIfExists(diceQuery);
-    if (selfProvided)
+    if (selfProvided) {
       return selfProvided;
-    else if (this.parent)
+    }
+
+    // delegate (bubble) to parent / container
+    if (this.parent)
       return this.parent.resolveGetterQuery(diceQuery);
     else
       return this.container.resolveGetterQuery(diceQuery);
