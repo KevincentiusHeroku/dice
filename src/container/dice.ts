@@ -106,9 +106,10 @@ export class Dice<T> {
     }
 
     // delegate (bubble) to parent / container
-    if (this.parent)
+    if (this.parent) {
       return this.parent.resolveGetterQuery(diceQuery);
-    else
+    } else {
       return this.container.resolveGetterQuery(diceQuery);
+    }
   }
 }

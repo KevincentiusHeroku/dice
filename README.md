@@ -26,13 +26,11 @@ Serialization can be done by using the Serializer class (get it via `@requires` 
 
 ## Deployment
 
-Uncomment `// "**/*.spec.ts"` from `package.json` excludes, then run the following:
+run the following:
 
     npm install
     npm run build
     npm publish
-
-When done, comment the line again from package.json.
 
 ## Development
 
